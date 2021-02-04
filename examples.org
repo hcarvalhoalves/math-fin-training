@@ -1,0 +1,158 @@
+#+TITLE: Fundamentos de Matemática Financeira
+#+AUTHOR: Henrique Carvalho Alves
+#+EMAIL: henrique.alves@nubank.com.br
+#+LANGUAGE: pt
+#+LATEX_HEADER: \usepackage{parskip} \usepackage[AUTO]{babel}
+#+PROPERTY: header-args :session *cider-org* :exports both
+
+#+begin_src clojure :exports none :results silent
+(use 'sample)
+#+end_src
+
+* Juros
+
+** Fundamentos
+
+   Dado o capital (ou valor presente) ${PV}$, a taxa de juros (%) $i$, o juro
+   $I$ e o saldo (ou valor futuro) $FV$, as relações fundamentais são:
+
+   #+begin_src clojure :results latex :exports results
+(render (eq 'I (* 'PV 'i)))
+   #+end_src
+
+   #+RESULTS:
+   #+begin_export latex
+   $I = {PV}\,i$
+   #+end_export
+
+   #+begin_src clojure :results latex :exports results
+(render (eq 'FV (+ 'PV (* 'PV 'i)) (* 'PV (+ 'i 1))))
+   #+end_src
+
+   #+RESULTS:
+   #+begin_export latex
+   ${FV} = {PV} + {PV}\,i = {PV}\,\left(i + 1\right)$
+   #+end_export
+
+   #+begin_src clojure :results latex :exports results
+(render (eq 'i (- (/ 'FV 'PV) 1)))
+   #+end_src
+
+   #+RESULTS:
+   #+begin_export latex
+   $i = \left(\frac{{FV}}{{PV}}\right) - 1$
+   #+end_export
+
+   *Exemplo:*
+
+   Um capital de $ 1000 aplicado durante um ano à taxa de 22% ao ano.
+
+   O juro é dado por:
+   #+begin_src clojure :exports both
+(* 1000 0.22M)
+   #+end_src
+
+   #+RESULTS:
+   : 220.00M
+
+   O saldo ao fim do período é dado por:
+   #+begin_src clojure :exports both
+(* 1000 1.22M)
+   #+end_src
+
+   #+RESULTS:
+   : 1220.00M
+
+   A taxa de juros pode ser inferida por:
+   #+begin_src clojure :exports both
+(- (/ 1220 1000) 1M)
+   #+end_src
+
+   #+RESULTS:
+   : 0.22M
+   -----
+   
+   Nesse caso, $i$ representa a taxa de juros ao longo de todo o período.
+   Quando aplicamos o capital à taxa por mais de um período (por exemplo, 22% ao
+   ano durante dois anos), é preciso adotar uma de duas convenções
+   para compor o saldo: *juros simples* ou *juros compostos*.
+   
+** Juros simples
+
+   Aplica-se a taxa $i$ ao mesmo capital (ou valor presente) repetidamente:
+
+   #+begin_src clojure :results latex :exports results
+(render (eq 'FV (* (i->series (simple 'i)) 'PV)))
+   #+end_src
+
+   #+RESULTS:
+   #+begin_export latex
+   ${FV} = {{PV} + {PV}\,i + {PV}\,i + {PV}\,i + \ldots}$
+   #+end_export
+
+   Ou seja, se aplicada $n$ vezes:
+
+   #+begin_src clojure :results latex
+(render (eq 'FV (* ((simple 'i) 'n) 'PV)))
+   #+end_src
+
+   #+RESULTS:
+   #+begin_export latex
+   ${FV} = \left(1 + i\,n\right)\,{PV}$
+   #+end_export
+
+   *Exemplo:*
+
+   Um capital de $ 1000 aplicado durante 2 anos à taxa de 22% ao ano.
+
+   #+begin_src clojure
+(* 1000 ((simple 0.22M) 2))
+   #+end_src
+
+   #+RESULTS:
+   : 1440.00M
+
+   Um capital de $ 1000 aplicado durante 1 ano e meio à taxa de 22% ao ano.
+
+   #+begin_src clojure
+(* 1000 ((simple 0.22M) (+ 1 1/2)))
+   #+end_src
+
+   #+RESULTS:
+   : 1330.000M
+
+** Juros compostos
+
+   Aplica-se a taxa $i$ sobre o saldo de cada período repetidamente:
+   
+   #+begin_src clojure :results latex :exports results
+(render (eq 'FV (* (i->series (compound 'i)) 'PV)))
+   #+end_src
+
+   #+RESULTS:
+   #+begin_export latex
+   ${FV} = {{PV} + {PV}\,i + \left({PV}\,{i}^{2} + {PV}\,i\right) + \left({PV}\,{i}^{3} + 2\,{PV}\,{i}^{2} + {PV}\,i\right) + \ldots}$
+   #+end_export
+
+   Ou seja, se aplicada $n$ vezes:
+   
+   #+begin_src clojure :results latex :exports results
+(render (eq 'FV (* ((compound 'i) 'n) 'PV)))
+   #+end_src
+
+   #+RESULTS:
+   #+begin_export latex
+   ${FV} = {\left(1 + i\right)}^{n}\,{PV}$
+   #+end_export
+
+   *Exemplo:*
+
+   Um capital de $ 1000 aplicado durante 3 meses e meio à taxa de 8% ao mês.
+
+   #+begin_src clojure
+(* 1000 ((compound 0.08M) (+ 3 1/2)))
+   #+end_src
+
+   #+RESULTS:
+   : 1309.1311121425235
+

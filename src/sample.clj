@@ -1,19 +1,42 @@
 (ns sample
   (:require [sicmutils.env :refer :all]
-            [sicmutils.structure :as t]
             [sicmutils.series :as s]
-            [sicmutils.expression]
+            [sicmutils.value]
+            [clojure.string]
             [clojure.algo.generic.functor :refer :all]
-            [clojure.algo.generic.math-functions :as m]
-            [clojure.pprint])
-  (:import (clojure.lang IFn)))
+            [clojure.pprint]
+            [render :refer :all])
+  (:import (clojure.lang IFn Seqable Sequential)))
 
 ;;;; Helpers
 
-(def render (comp ->infix simplify))
+(defn- eqsym
+  ([sym a b]
+   (reify
+     Object
+     (toString [this]
+       (str (freeze this)))
+     sicmutils.value.Value
+     (freeze [_]
+       `(~sym ~(freeze a) ~(freeze b)))))
+  ([sym a b & args]
+   (reify
+     Object
+     (toString [this]
+       (str (freeze this)))
+     sicmutils.value.Value
+     (freeze [_]
+       (cons sym (map freeze (into [a b] args)))))))
 
-(defmethod print-method sicmutils.expression.Literal [v ^java.io.Writer w]
-  (.write w (render v)))
+(def eq (partial eqsym '=))
+(def gt (partial eqsym '>))
+(def lt (partial eqsym '<))
+(def geq (partial eqsym '>=))
+(def leq (partial eqsym '<=))
+
+(defn render [v]
+  (binding [sicmutils.expression.render/*TeX-sans-serif-symbols* false]
+    (str "$" (->TeX v) "$")))
 
 ;;;; Interest
 
@@ -28,7 +51,7 @@
 (comment
   ((simple 'i) 'n)
   ((compound 'i) 'n)
-  
+
   ((simple 0.1) 12)
   ((compound 0.1) 12)
   ((compound 0.1) -12))
@@ -57,19 +80,19 @@
 (def m->d365 12/365)
 (def m->dActual (/ 12 (/ (+ (* 303 365) (* 97 366)) 400))) ; In every 400-year period, there are 303 regular years and 97 leap years in the Gregorian calendar.
 
-(defn converted [f i factor]
-  (f (- ((f i) factor) 1)))
-
 (comment
-  ((converted compound 0.1 m->d252) 21)
-  (render ((converted compound 'i m->d252) 21))
-  ((converted compound 0.1 m->d360) 30)
-  ((converted compound 0.1 m->d365) 30)
-  ((converted compound 0.1 m->d365) 31)
-  ((converted compound 0.1 m->dActual) 30)
-  ((converted compound 0.1 m->dActual) 31)
-  ((converted compound 0.1 m->y) 1)
-  ((converted compound (- 3.138429 1) (* y->m m->d360)) 30))
+  ((compound 'i) (* 'n m->d252))
+  ((compound 0.1) (* 21 m->d252))
+
+  ((compound 0.1) (* 30 m->d360))
+
+  ((compound 0.1) (* 30 m->d365))
+  ((compound 0.1) (* 31 m->d365))
+  ((compound 0.1) (* (/ 365 12) m->d365))
+
+  ((compound 0.1) (* 30 m->dActual))
+  ((compound 0.1) (* 31 m->dActual))
+  ((compound 0.1) (* (/ 365.2425 12) m->dActual)))
 
 ;;;; Series
 
@@ -141,7 +164,10 @@
       :interest      (- icf cf)
       :balance       (partial-sums icf)})))
 
-;; Derivation of formula for Constant (aka Mortgage-style) amortization method
+(comment
+  (price 0.1 3 1000))
+
+;; Derivation of formula for Straight-Line (aka Constant or Mortgage-style) amortization method
 ;;
 ;; Let $ 1000 @ 10% in 3 payments be represented by the table:
 ;;
@@ -164,18 +190,19 @@
 ;;
 ;; (-k i pv + i n pv + pv) / n
 
-(defn sac
+(defn straight
   ([i n pv]
-   (let [i'     (simple i)
-         a'     (- (pmt i' n))
-         amorts (* pv (x->series a'))
-         ps     (* amorts (i->series i'))]
-     {:payments      (- amorts (- ps amorts))
-      :amortizations (- amorts (series pv))
-      :interest      (- ps amorts)
-      :balance       (partial-sums amorts)})))
+   (let [i'  (simple i)
+         p'  (- (pmt i' n))
+         cf  (* pv (x->series p'))
+         icf (* cf (i->series i'))]
+     {:payments      (- cf (- icf cf))
+      :amortizations (- cf (series pv))
+      :interest      (- icf cf)
+      :balance       (partial-sums cf)})))
 
-(fmap (partial take) (sac 0.039944 3 90))
+(comment
+  (straight 0.1 3 1000))
 
 ;;;; Ledger
 
@@ -187,23 +214,15 @@
        {credit amounts
         debit  (- amounts)}))))
 
-(sac (dec ((converted compound 0.6 y->m) 1)) 3 90)
+(defn run-sheet [n s]
+  (fmap #(take n (s/partial-sums %)) s))
 
-(comment
-  (with-precision 8
-    (let [pv     90
-          n      3
-          i      (converted simple ((converted compound 0.6 (* y->m)) 1) m->d360)
-          a      (- (* pv (pmt i n)))
-          amorts (map->series {0  pv
-                               30 a
-                               60 a
-                               90 a})
-          ps     (* amorts (i->series i))
-          #_bs   #_ (balance-sheet [:asset.cash :asset.loan] cash
-                                    [:pnl.revenue :asset.loan] revenue)]
-      (->> {:payments      (- amorts (- ps amorts))
-            :amortizations (- amorts (series pv))
-            :interest      (- ps amorts)
-            :balance       (partial-sums amorts)}
-           (fmap (partial take 91))))))
+(let [t (straight 0.1 3 1000)]
+  (->> (balance-sheet [:pnl/revenue :asset/loan] (:interest t)
+                      [:asset/cash :asset/loan] (:payments t))
+       (run-sheet 4)))
+
+(let [t (price 0.1 3 1000)]
+  (->> (balance-sheet [:pnl/revenue :asset/loan] (:interest t)
+                      [:asset/cash :asset/loan] (:payments t))
+       (run-sheet 4)))
