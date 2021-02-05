@@ -1,42 +1,57 @@
 (ns sample
-  (:require [sicmutils.env :refer :all]
-            [sicmutils.series :as s]
-            [sicmutils.value]
+  (:require [sicmutils.series :as s]
+            [sicmutils.value :refer :all]
+            [sicmutils.generic :refer :all]
+            [sicmutils.expression.render :refer :all]
             [clojure.string]
-            [clojure.algo.generic.functor :refer :all]
-            [clojure.pprint]
-            [render :refer :all])
-  (:import (clojure.lang IFn Seqable Sequential)))
+            [clojure.algo.generic.functor :refer :all]))
 
 ;;;; Helpers
 
-(defn- eqsym
-  ([sym a b]
-   (reify
-     Object
-     (toString [this]
-       (str (freeze this)))
-     sicmutils.value.Value
-     (freeze [_]
-       `(~sym ~(freeze a) ~(freeze b)))))
-  ([sym a b & args]
-   (reify
-     Object
-     (toString [this]
-       (str (freeze this)))
-     sicmutils.value.Value
-     (freeze [_]
-       (cons sym (map freeze (into [a b] args)))))))
-
-(def eq (partial eqsym '=))
-(def gt (partial eqsym '>))
-(def lt (partial eqsym '<))
-(def geq (partial eqsym '>=))
-(def leq (partial eqsym '<=))
+(defn render* [v]
+  (binding [sicmutils.expression.render/*TeX-sans-serif-symbols* false]
+    (->TeX v)))
 
 (defn render [v]
-  (binding [sicmutils.expression.render/*TeX-sans-serif-symbols* false]
-    (str "$" (->TeX v) "$")))
+  (str "$" (render* v) "$"))
+
+(defn align
+  ([eq]
+   (str "\\begin{align*}"
+        (-> (render* eq)
+            (clojure.string/replace "=" "\\\\&=")
+            (clojure.string/replace-first "\\\\&=" "&="))
+        "\\end{align*}"))
+  ([eq & eqs]
+   (str "\\begin{align}"
+        (->> eqs
+             (into [eq])
+             (map (fn [eq]
+                    (-> (render* eq)
+                        (clojure.string/replace "=" "\\\\&=")
+                        (clojure.string/replace-first "\\\\&=" "&="))))
+             (clojure.string/join "\\\\"))
+        "\\end{align}")))
+
+(deftype Equation [sym args]
+  Object
+  (toString [this]
+    (str (freeze this)))
+  sicmutils.value.Value
+  (kind [_]
+    ::equation)
+  (freeze [_]
+    (cons sym (map freeze args))))
+
+(defn eqsym [sym]
+  (fn [& args]
+    (Equation. sym args)))
+
+(def eq (eqsym '=))
+(def gt (eqsym '>))
+(def lt (eqsym '<))
+(def geq (eqsym '>=))
+(def leq (eqsym '<=))
 
 ;;;; Interest
 
@@ -61,6 +76,12 @@
 
 (defn fv [f n m]
   (* m (f n)))
+
+(defn interest [f n m]
+  (* m (- (f n) 1)))
+
+(defn rate [fv pv]
+  (- (/ fv pv) 1))
 
 (comment
   (fv (simple 'i) 'n 'pv)
@@ -160,9 +181,9 @@
          cf  (* pv (x->series p'))
          icf (* cf (i->series i'))]
      {:payments      cf
-      :amortizations (- icf (series pv))
+      :amortizations (- icf (s/series pv))
       :interest      (- icf cf)
-      :balance       (partial-sums icf)})))
+      :balance       (s/partial-sums icf)})))
 
 (comment
   (price 0.1 3 1000))
@@ -197,9 +218,9 @@
          cf  (* pv (x->series p'))
          icf (* cf (i->series i'))]
      {:payments      (- cf (- icf cf))
-      :amortizations (- cf (series pv))
+      :amortizations (- cf (s/series pv))
       :interest      (- icf cf)
-      :balance       (partial-sums cf)})))
+      :balance       (s/partial-sums cf)})))
 
 (comment
   (straight 0.1 3 1000))
@@ -217,12 +238,14 @@
 (defn run-sheet [n s]
   (fmap #(take n (s/partial-sums %)) s))
 
-(let [t (straight 0.1 3 1000)]
-  (->> (balance-sheet [:pnl/revenue :asset/loan] (:interest t)
-                      [:asset/cash :asset/loan] (:payments t))
-       (run-sheet 4)))
+(comment
+  (let [t (straight 0.1 3 1000)]
+   (->> (balance-sheet [:pnl/revenue :asset/loan] (:interest t)
+                       [:asset/cash :asset/loan] (:payments t))
+        (run-sheet 4))))
 
-(let [t (price 0.1 3 1000)]
-  (->> (balance-sheet [:pnl/revenue :asset/loan] (:interest t)
-                      [:asset/cash :asset/loan] (:payments t))
-       (run-sheet 4)))
+(comment
+  (let [t (price 0.1 3 1000)]
+   (->> (balance-sheet [:pnl/revenue :asset/loan] (:interest t)
+                       [:asset/cash :asset/loan] (:payments t))
+        (run-sheet 4))))
