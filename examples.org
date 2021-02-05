@@ -95,7 +95,6 @@
    *Exemplo:*
 
    Um capital de $ 1000 aplicado à taxa de 8% ao mês segue a progressão:
-
    #+begin_src clojure :results latex :exports results
 (align (eq 'FV (* 1000 (i->series (simple 0.08M)))))
    #+end_src
@@ -113,7 +112,49 @@
 
    #+RESULTS:
    : 1240.0M
-    
+
+*** Equivalência de taxas
+   
+    São equivalentes as taxas $i_1$ e $i_2$ se, aplicadas nos períodos $p_1$ e $p_2$ relativos a duração da cada taxa, resultam no mesmo valor futuro $FV$.
+
+    #+begin_src clojure :results latex :exports results
+(align (eq 'FV (fv (simple 'i_1) 'p_1 'PV) (fv (simple 'i_2) 'p_2 'PV)))
+    #+end_src
+
+    #+RESULTS:
+    #+begin_export latex
+    \begin{align*}{FV} &= {PV}\,\left(1 + i_1\,p_1\right) \\&= {PV}\,\left(1 + i_2\,p_2\right)\end{align*}
+    #+end_export
+
+    Simplificando:
+    #+begin_src clojure :results latex :exports results
+(align (eq (simplify (interest (simple 'i_1) 'p_1 1))
+           (simplify (interest (simple 'i_2) 'p_2 1))))
+    #+end_src
+
+    #+RESULTS:
+    #+begin_export latex
+    \begin{align*}i_1\,p_1 &= i_2\,p_2\end{align*}
+    #+end_export
+
+    *Exemplo:*
+
+    Qual a taxa mensal equivalente a 22% ao ano em juros simples?
+    #+begin_src clojure
+(* 0.22M 1/12)
+    #+end_src
+
+    #+RESULTS:
+    : 0.018333M
+
+    Prova:
+    #+begin_src clojure
+(rate (* ((simple 0.018333M) 12) 1000) 1000)
+    #+end_src
+
+    #+RESULTS:
+    : 0.22M
+
 ** Juros compostos
 
    Aplica-se a taxa $i$ sobre o saldo de cada período recursivamente:
@@ -148,85 +189,45 @@
 
    #+RESULTS:
    : 1259.7M
-
-   \newpage
    
-** Equivalência de taxas
+*** Equivalência de taxas
    
-   São equivalentes as taxas $i_1$ e $i_2$ se, aplicadas nos períodos $p_1$ e $p_2$ relativos a duração da cada taxa, resultam no mesmo valor futuro $FV$.
+    São equivalentes as taxas $i_1$ e $i_2$ se, aplicadas nos períodos $p_1$ e $p_2$ relativos a duração da cada taxa, resultam no mesmo valor futuro $FV$.
 
-   No caso de *juros simples*:
-   #+begin_src clojure :results latex :exports results
-(align (eq 'FV (fv (simple 'i_1) 'p_1 'PV) (fv (simple 'i_2) 'p_2 'PV)))
-   #+end_src
-
-   #+RESULTS:
-   #+begin_export latex
-   \begin{align*}{FV} &= {PV}\,\left(1 + i_1\,p_1\right) \\&= {PV}\,\left(1 + i_2\,p_2\right)\end{align*}
-   #+end_export
-
-   Simplificando:
-   #+begin_src clojure :results latex :exports results
-(align (eq (simplify (interest (simple 'i_1) 'p_1 1))
-           (simplify (interest (simple 'i_2) 'p_2 1))))
-   #+end_src
-
-   #+RESULTS:
-   #+begin_export latex
-   \begin{align*}i_1\,p_1 &= i_2\,p_2\end{align*}
-   #+end_export
-
-   No caso de *juros compostos*:
-   #+begin_src clojure :results latex :exports results
+    #+begin_src clojure :results latex :exports results
 (align (eq 'FV (fv (compound 'i_1) 'p_1 'PV) (fv (compound 'i_2) 'p_2 'PV)))
-   #+end_src
+    #+end_src
 
-   #+RESULTS:
-   #+begin_export latex
-   \begin{align*}{FV} &= {PV}\,{\left(1 + i_1\right)}^{p_1} \\&= {PV}\,{\left(1 + i_2\right)}^{p_2}\end{align*}
-   #+end_export
+    #+RESULTS:
+    #+begin_export latex
+    \begin{align*}{FV} &= {PV}\,{\left(1 + i_1\right)}^{p_1} \\&= {PV}\,{\left(1 + i_2\right)}^{p_2}\end{align*}
+    #+end_export
 
-   Simplificando:
-   #+begin_src clojure :results latex :exports results
+    Simplificando:
+    #+begin_src clojure :results latex :exports results
 (align (eq (simplify (interest (compound 'i_1) 'p_1 1))
            (simplify (interest (compound 'i_2) 'p_2 1))))
-   #+end_src
+    #+end_src
 
-   #+RESULTS:
-   #+begin_export latex
-   \begin{align*}{\left(i_1 + 1\right)}^{p_1} + -1 &= {\left(i_2 + 1\right)}^{p_2} + -1\end{align*}
-   #+end_export
+    #+RESULTS:
+    #+begin_export latex
+    \begin{align*}{\left(i_1 + 1\right)}^{p_1} + -1 &= {\left(i_2 + 1\right)}^{p_2} + -1\end{align*}
+    #+end_export
 
-   *Exemplos:*
+    *Exemplo:*
 
-   Qual a taxa mensal equivalente a 22% ao ano em juros simples?
-   #+begin_src clojure
-(* 0.22M 1/12)
-   #+end_src
-
-   #+RESULTS:
-   : 0.018333M
-
-   Prova:
-   #+begin_src clojure
-(rate (* ((simple 0.018333M) 12) 1000) 1000)
-   #+end_src
-
-   #+RESULTS:
-   : 0.22M
-
-   Qual a taxa mensal equivalente a 26.5% ao ano em juros compostos?
-   #+begin_src clojure
+    Qual a taxa mensal equivalente a 12.65% ao ano em juros compostos?
+    #+begin_src clojure
 (- (expt 1.1265M 1/12) 1)
-   #+end_src
+    #+end_src
 
-   #+RESULTS:
-   : 0.009975719105089098
+    #+RESULTS:
+    : 0.009975719105089098
 
-   Prova:
-   #+begin_src clojure
+    Prova:
+    #+begin_src clojure
 (rate (* ((compound 0.009976) 12) 1000) 1000)
-   #+end_src
+    #+end_src
 
-   #+RESULTS:
-   : 0.12650375963811866
+    #+RESULTS:
+    : 0.12650375963811866
