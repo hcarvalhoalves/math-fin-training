@@ -9,7 +9,7 @@
 ;;;; Helpers
 
 (defn render* [v]
-  (binding [sicmutils.expression.render/*TeX-sans-serif-symbols* false]
+  (binding [*TeX-sans-serif-symbols* false]
     (->TeX v)))
 
 (defn render [v]
@@ -33,25 +33,30 @@
              (clojure.string/join "\\\\"))
         "\\end{align}")))
 
-(deftype Equation [sym args]
+(deftype Equation [args]
   Object
   (toString [this]
     (str (freeze this)))
   sicmutils.value.Value
   (kind [_]
-    ::equation)
+    :sicmutils.expression/numeric)
   (freeze [_]
-    (cons sym (map freeze args))))
+    `(~'= ~@(map freeze args))))
 
-(defn eqsym [sym]
-  (fn [& args]
-    (Equation. sym args)))
+(defn eq [& args]
+  (Equation. args))
 
-(def eq (eqsym '=))
-(def gt (eqsym '>))
-(def lt (eqsym '<))
-(def geq (eqsym '>=))
-(def leq (eqsym '<=))
+(defmethod = [:sicmutils.expression/numeric :sicmutils.expression/numeric]
+  [l r]
+  (eq l r))
+
+(defmethod = [:sicmutils.expression/numeric :sicmutils.value/number]
+  [l r]
+  (eq l r))
+
+(defmethod = [:sicmutils.value/number :sicmutils.expression/numeric]
+  [l r]
+  (eq l r))
 
 ;;;; Interest
 
@@ -78,7 +83,7 @@
   (* m (f n)))
 
 (defn interest [f n m]
-  (* m (- (f n) 1)))
+  (simplify (* m (- (f n) 1))))
 
 (defn rate [fv pv]
   (- (/ fv pv) 1))
