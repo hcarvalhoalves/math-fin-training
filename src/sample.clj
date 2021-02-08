@@ -24,13 +24,13 @@
         "\\end{align*}"))
   ([eq & eqs]
    (str "\\begin{align}"
-        (->> eqs
-             (into [eq])
-             (map (fn [eq]
-                    (-> (render* eq)
-                        (clojure.string/replace "=" "\\\\&=")
-                        (clojure.string/replace-first "\\\\&=" "&="))))
-             (clojure.string/join "\\\\"))
+        (clojure.string/join
+         "\\\\"
+         (map (fn [eq]
+                (-> (render* eq)
+                    (clojure.string/replace "=" "\\\\&=")
+                    (clojure.string/replace-first "\\\\&=" "&=")))
+              (into [eq] eqs)))
         "\\end{align}")))
 
 (deftype Equation [args]
@@ -68,6 +68,12 @@
   (fn [n]
     (expt (+ 1 i) n)))
 
+(defn compound-index [is]
+  (fn [n]
+    (if (symbol? n)
+      (reduce * (mapv #(+ 1 %) is))
+      (reduce * (map #(+ 1 %) (take n is))))))
+
 (comment
   ((simple 'i) 'n)
   ((compound 'i) 'n)
@@ -85,8 +91,11 @@
 (defn interest [f n m]
   (* m (- (f n) 1)))
 
-(defn rate [fv pv]
-  (- (/ fv pv) 1))
+(defn rate
+  ([factor]
+   (rate factor 1))
+  ([fv pv]
+   (- (/ fv pv) 1)))
 
 (comment
   (fv (simple 'i) 'n 'pv)
@@ -139,12 +148,6 @@
 
 (defn i->series [f]
   (s/generate (term f) :sicmutils.series/series))
-
-(defn compound-index [is]
-  (fn [n]
-    (if (symbol? n)
-      (reduce * (mapv #(+ 1 %) is))
-      (reduce * (map #(+ 1 %) (take n is))))))
 
 ;;;; Amortization methods
 
@@ -259,3 +262,19 @@
    (->> (balance-sheet [:pnl/revenue :asset/loan] (:interest t)
                        [:asset/cash :asset/loan] (:payments t))
         (run-sheet 4))))
+
+(map *
+     [0.10 0.10 0.10]
+     [0.25 0.20 0.175])
+
+(* ((compound-index [(- (expt 1.18 30/360) 1)])
+    1) 15000)
+
+
+(* ((* (compound-index [0.013888430348409920])
+     (compound-index [-0.225])) 1) 15000)
+
+((* (compound-index ['i])
+    (compound-index ['t])) 1)
+
+(interest (compound (* 0.013888430348409920 (- 1 0.225))) 1 15000)

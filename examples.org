@@ -50,7 +50,7 @@
    #+end_src
 
    #+RESULTS:
-   : 220.0
+   : 220.00M
 
    O saldo ao fim do período é dado por:
    #+begin_src clojure
@@ -58,7 +58,7 @@
    #+end_src
 
    #+RESULTS:
-   : 1220.0
+   : 1220.0M
 
    O capital que aplicamos para obter $ 1220 à mesma taxa é:
    #+begin_src clojure
@@ -66,7 +66,7 @@
    #+end_src
 
    #+RESULTS:
-   : 1000.0
+   : 1.0E+3M
 
    A taxa de juros pode ser inferida por:
    #+begin_src clojure
@@ -74,7 +74,7 @@
    #+end_src
 
    #+RESULTS:
-   : 11/50
+   : 0.22M
 
    Nesse caso, $i$ representa a taxa de juros ao longo de um período inteiro.
    Quando aplicamos o capital por mais de um período (por exemplo, 22% ao ano durante dois anos), é preciso adotar uma de duas convenções para o cálculo: *juros simples* ou *juros compostos*.
@@ -94,7 +94,7 @@
 
     #+RESULTS:
     #+begin_export latex
-    \begin{align*}{FV} &= {PV} + {PV}\,i + {PV}\,i + {PV}\,i + \ldots \\&= {PV}\,\left(1 + i\,n\right)\end{align*}
+    \begin{align*}{FV} &= {PV} + {PV}\,i + 2\,{PV}\,i + 3\,{PV}\,i + \ldots \\&= {PV}\,\left(1 + i\,n\right)\end{align*}
     #+end_export
 
     Assim, o juro simples $I_S$ é uma função *linear* do período $n$:
@@ -105,7 +105,7 @@
 
     #+RESULTS:
     #+begin_export latex
-    \begin{align*}{I_S(n)} &= {PV}\,i\,n\end{align*}
+    \begin{align*}{I_S(n)} &= {PV}\,\left(\left(1 + i\,n\right) - 1\right)\end{align*}
     #+end_export
 
     *Exemplo:*
@@ -117,7 +117,7 @@
 
     #+RESULTS:
     #+begin_export latex
-    \begin{align*}{FV} &= 1000 + 80.00000000000007 + 79.99999999999984 + 80.00000000000007 + \ldots\end{align*}
+    \begin{align*}{FV} &= 1000 + 80.00 + 160.00 + 240.00 + \ldots\end{align*}
     #+end_export
 
     Portanto o saldo ao fim de 3 meses equivale a:
@@ -126,7 +126,7 @@
     #+end_src
 
     #+RESULTS:
-    : 1240.0
+    : 1240.0M
 
 *** Valor presente
 
@@ -140,7 +140,7 @@
 
     #+RESULTS:
     #+begin_export latex
-    \begin{align*}{PV} &= \left(\frac{1}{{FV}}\right) + \left(\frac{i}{{FV}}\right) + \left(\frac{i}{{FV}}\right) + \left(\frac{i}{{FV}}\right) + \ldots \\&= \frac{{FV}}{1 + i\,n}\end{align*}
+    \begin{align*}{PV} &= \left(\frac{1}{{FV}}\right) + \left(\frac{i}{{FV}}\right) + \left(\frac{2\,i}{{FV}}\right) + \left(\frac{3\,i}{{FV}}\right) + \ldots \\&= \frac{{FV}}{1 + i\,n}\end{align*}
     #+end_export
 
     Assim, o capital que equivale a este saldo (ou ainda, o valor futuro trazido a valor presente) na mesma taxa é:
@@ -149,7 +149,7 @@
     #+end_src
 
     #+RESULTS:
-    : 1000.0
+    : 1.0E+3M
 
 *** Equivalência de taxas
    
@@ -176,21 +176,21 @@
 
     *Exemplo:*
 
-    Qual a taxa mensal equivalente a 22% ao ano em juros simples?
+    Qual a taxa mensal equivalente a 21% ao ano em juros simples?
     #+begin_src clojure
-(* 0.22M 1/12)
+(* 0.21M 1/12)
     #+end_src
 
     #+RESULTS:
-    : 0.018333333333333333
+    : 0.017500M
 
     Prova:
     #+begin_src clojure
-(rate (* ((simple 0.018333M) 12) 1000) 1000)
+(rate ((simple 0.017500M) 12))
     #+end_src
 
     #+RESULTS:
-    : 0.21999600000000008
+    : 0.2100M
 
     \newpage
 
@@ -205,7 +205,7 @@
 
     #+RESULTS:
     #+begin_export latex
-    \begin{align*}{FV} &= {PV} + {PV}\,i + \left({PV}\,{i}^{2} + {PV}\,i\right) + \left({PV}\,{i}^{3} + 2\,{PV}\,{i}^{2} + {PV}\,i\right) + \ldots \\&= {PV}\,{\left(1 + i\right)}^{n}\end{align*}
+    \begin{align*}{FV} &= {PV} + {PV}\,i + \left({PV}\,{i}^{2} + 2\,{PV}\,i\right) + \left({PV}\,{i}^{3} + 3\,{PV}\,{i}^{2} + 3\,{PV}\,i\right) + \ldots \\&= {PV}\,{\left(1 + i\right)}^{n}\end{align*}
     #+end_export
 
     Assim, diferente do juro simples, o juro $I_C$ é uma função *não-linear* do período $n$:
@@ -216,7 +216,7 @@
 
     #+RESULTS:
     #+begin_export latex
-    \begin{align*}{I_C(n)} &= {PV}\,{\left(i + 1\right)}^{n} - {PV}\end{align*}
+    \begin{align*}{I_C(n)} &= {PV}\,\left({\left(1 + i\right)}^{n} - 1\right)\end{align*}
     #+end_export
 
     *Exemplo:*
@@ -228,7 +228,7 @@
 
     #+RESULTS:
     #+begin_export latex
-    \begin{align*}{FV} &= 1000 + 80.00000000000007 + 86.40000000000003 + 93.31200000000007 + \ldots\end{align*}
+    \begin{align*}{FV} &= 1000 + 80.00 + 166.40 + 259.70 + \ldots\end{align*}
     #+end_export
 
     Portanto o saldo ao fim de 3 meses equivale a:
@@ -238,7 +238,7 @@
     #+end_src
 
     #+RESULTS:
-    : 1259.7120000000002
+    : 1259.7M
 
 *** Valor presente
 
@@ -252,7 +252,7 @@
 
     #+RESULTS:
     #+begin_export latex
-    \begin{align*}{PV} &= \left(\frac{1}{{FV}}\right) + \left(\frac{i}{{FV}}\right) + \left(\frac{{i}^{2} + i}{{FV}}\right) + \left(\frac{{i}^{3} + 2\,{i}^{2} + i}{{FV}}\right) + \ldots \\&= \frac{{FV}}{{\left(1 + i\right)}^{n}}\end{align*}
+    \begin{align*}{PV} &= \left(\frac{1}{{FV}}\right) + \left(\frac{i}{{FV}}\right) + \left(\frac{{i}^{2} + 2\,i}{{FV}}\right) + \left(\frac{{i}^{3} + 3\,{i}^{2} + 3\,i}{{FV}}\right) + \ldots \\&= \frac{{FV}}{{\left(1 + i\right)}^{n}}\end{align*}
     #+end_export
 
     Assim, o capital que equivale a este saldo (ou ainda, o valor futuro trazido a valor presente) na mesma taxa é:
@@ -261,7 +261,7 @@
     #+end_src
 
     #+RESULTS:
-    : 999.9904740131077
+    : 1E+3M
 
 *** Equivalência de taxas
    
@@ -298,11 +298,11 @@
 
     Prova:
     #+begin_src clojure
-(rate (* ((compound 0.0099M) 12) 1000) 1000)
+(rate ((compound 0.0099M) 12))
     #+end_src
 
     #+RESULTS:
-    : 0.1254869569260173
+    : 0.1255M
 
     \newpage
     
@@ -310,7 +310,7 @@
 
     Quando a taxa de juros não permanece constante a cada período, podemos generalizar as fórmulas do valor futuro $FV$ e juro $I$ para um vetor $i$.
     
-    Para isso, partimos da definição da taxa efetiva $i_e$, que equivale a aplicar cada taxa consecutivamente, e substituir $i$ nas outras fórmulas:
+    Para isso, partimos da definição da taxa efetiva $i_e$, que equivale a aplicar a taxa de cada período consecutivamente, e então substituindo $i$ nas outras fórmulas obtemos:
     
     #+begin_src clojure :results latex :exports results
 (let [i ['i_1 'i_2 'i_3 '... 'i_n]
@@ -338,29 +338,80 @@
 
     Qual o valor ($) do rendimento?
     #+begin_src clojure
-(let [i (compound-index [0.013 0.017 0.021])]
+(let [i (compound-index [0.013M 0.017M 0.021M])]
   (interest i 3 16000))
     #+end_src
 
     #+RESULTS:
-    : 829.6902559999957
+    : 828.80M
 
     Qual a rentabilidade (%) no trimestre?
     #+begin_src clojure
 (let [c 16000
-      i (compound-index [0.013 0.017 0.021])]
+      i (compound-index [0.013M 0.017M 0.021M])]
   (rate (fv i 3 c) c))
     #+end_src
 
     #+RESULTS:
-    : 0.05185564099999973
+    : 0.0518M
 
     Ou ainda, independente do capital aplicado:
     #+begin_src clojure
-(let [i (compound-index [0.013 0.017 0.021])]
+(let [i (compound-index [0.013M 0.017M 0.021M])]
   (- (i 3) 1))
     #+end_src
 
     #+RESULTS:
-    : 0.05185564099999973
+    : 0.0518M
+
+*** Taxas corrigidas
+
+    É possível corrigir uma taxa $i$ por um índice $j_n$ com a fórmula:
     
+    #+begin_src clojure :results latex :exports results
+(eq 'I ((compound-index (* 'i ['j_1 'j_2 'j_3 '... 'j_n])) 'n))
+    #+end_src
+
+    #+RESULTS:
+    #+begin_export latex
+    $I = \left(1 + i\,j_1\right)\,\left(1 + i\,j_2\right)\,\left(1 + i\,j_3\right)\,\left(1 + i\,\ldots\right)\,\left(1 + i\,j_n\right)$
+    #+end_export
+
+    Ou ainda, generalizando para $i_n$:
+    
+    #+begin_src clojure :results latex :exports results
+(eq 'I ((compound-index (mapv * ['i_1 'i_2 'i_3 '... 'i_n] ['j_1 'j_2 'j_3 '... 'j_n])) 'n))
+    #+end_src
+
+    #+RESULTS:
+    #+begin_export latex
+    $I = \left(1 + i_1\,j_1\right)\,\left(1 + i_2\,j_2\right)\,\left(1 + i_3\,j_3\right)$
+    #+end_export
+
+    *Exemplo:*
+
+    Em três semestres consecutivos, uma aplicação rendeu 1.3%, 1.7% e 2.1%. Sabendo que o imposto de renda segue alíquotas semestrais progressivas de 22.5%, 20% e 17.5%, o rendimento ($) líquido é:
+    #+begin_src clojure
+(let [rates [0.013M 0.017M 0.021M]
+      ;; Recolher a alíquota equivale a render (1 - alíquota)
+      tax [(- 1 0.225) (- 1 0.20) (- 1 0.175)]
+      i (compound-index (mapv * rates tax))]
+  (interest i 3 16000))
+    #+end_src
+
+    #+RESULTS:
+    : 664.7930119440026
+
+    Prova:
+    
+    #+begin_src clojure :results latex
+(let [rates ['i_1 'i_2 'i_3]
+      tax [(- 1 'j_1) (- 1 'j_2) (- 1 'j_3)]
+      i (compound-index (mapv * rates tax))]
+  (eq 'I (interest i 'n 'PV)))
+    #+end_src
+
+    #+RESULTS:
+    #+begin_export latex
+    $I = {PV}\,\left(\left(1 + i_1\,\left(1 - j_1\right)\right)\,\left(1 + i_2\,\left(1 - j_2\right)\right)\,\left(1 + i_3\,\left(1 - j_3\right)\right) - 1\right)$
+    #+end_export
