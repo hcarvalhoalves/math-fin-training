@@ -83,7 +83,7 @@
   (* m (f n)))
 
 (defn interest [f n m]
-  (simplify (* m (- (f n) 1))))
+  (* m (- (f n) 1)))
 
 (defn rate [fv pv]
   (- (/ fv pv) 1))
@@ -135,11 +135,16 @@
 (defn term [f]
   (fn [n]
     (if (zero? n) 1
-        (- (f n)
-           (f (- n 1))))))
+        (interest f n 1))))
 
 (defn i->series [f]
   (s/generate (term f) :sicmutils.series/series))
+
+(defn compound-index [is]
+  (fn [n]
+    (if (symbol? n)
+      (reduce * (mapv #(+ 1 %) is))
+      (reduce * (map #(+ 1 %) (take n is))))))
 
 ;;;; Amortization methods
 
