@@ -23,7 +23,7 @@
             (clojure.string/replace-first "\\\\&=" "&="))
         "\\end{align*}"))
   ([eq & eqs]
-   (str "\\begin{align}"
+   (str "\\begin{align*}"
         (clojure.string/join
          "\\\\"
          (map (fn [eq]
@@ -31,7 +31,7 @@
                     (clojure.string/replace "=" "\\\\&=")
                     (clojure.string/replace-first "\\\\&=" "&=")))
               (into [eq] eqs)))
-        "\\end{align}")))
+        "\\end{align*}")))
 
 (deftype Equation [args]
   Object
@@ -58,6 +58,62 @@
   [l r]
   (eq l r))
 
+(defn draw-cashflow [xs]
+  (let [c         (max (count xs) 2)
+        h-max     8
+        h-spacing #(str "(" (* (float (/ h-max (dec c))) %) ",0)")
+        v-spacing #(str "(0," (if (pos? %1) 0.8 -0.8) ")")
+        arrow     "\\draw[->]"
+        node      #(str "node[" (if (pos? %1) "above" "below") "]{" (render %2) "}")
+        arrows    (->> xs
+                       (map-indexed
+                        (fn [idx [n [in out]]]
+                          [(when in
+                             (str arrow
+                                  (h-spacing idx)
+                                  (node -1 n)
+                                  "-- ++"
+                                  (v-spacing 1)
+                                  (node 1 in)))
+                           (when out
+                             (str arrow
+                                  (h-spacing idx)
+                                  (node 1 n)
+                                  "-- ++"
+                                  (v-spacing -1)
+                                  (node -1 out)))
+                           (when (and (not in) (not out))
+                             (str "\\draw[-]"
+                                  (h-spacing idx)
+                                  (node -1 n)))]))
+                       (apply concat))]
+    (str "\\begin{center}\\begin{tikzpicture}\\draw[-] (0,0) -- (" h-max ",0);"
+         (clojure.string/join ";" arrows)
+         "\\end{tikzpicture}\\end{center}")))
+
+(comment
+  (draw-cashflow {0 [10 -10]}))
+
+(deftype CashFlow [xs]
+  Object
+  (toString [this]
+    (str (freeze this)))
+  sicmutils.value.Value
+  (kind [_]
+    (kind xs))
+  (freeze [_]
+    xs))
+
+(defn cashflow [xs]
+  (CashFlow. xs))
+
+(defmethod print-method sample.Equation [v ^java.io.Writer w]
+  (.write w (render v)))
+(defmethod print-method sample.CashFlow [v ^java.io.Writer w]
+  (.write w (draw-cashflow (freeze v))))
+(defmethod print-method sicmutils.expression.Literal [v ^java.io.Writer w]
+  (.write w (render v)))
+
 ;;;; Interest
 
 (defn simple [i]
@@ -80,7 +136,9 @@
 
   ((simple 0.1) 12)
   ((compound 0.1) 12)
-  ((compound 0.1) -12))
+  ((compound 0.1) -12)
+
+  ((compound-index [0.3 0.5 0.6]) 3))
 
 (defn pv [f n m]
   (/ m (f n)))
@@ -144,7 +202,8 @@
 (defn term [f]
   (fn [n]
     (if (zero? n) 1
-        (interest f n 1))))
+        (- (interest f n 1)
+           (interest f (- n 1) 1)))))
 
 (defn i->series [f]
   (s/generate (term f) :sicmutils.series/series))
@@ -170,18 +229,6 @@
 ;; (- (* 1000 1.1) 402.11) => 697.89
 ;; (- (* (- (* 1000 1.1) 402.11) 1.1) 402.11) => 365.5690000000001
 ;; (- (* (- (* (- (* 1000 1.1) 402.11) 1.1) 402.11) 1.1) 402.11) => 0.0159000000001015
-;;
-;; Replacing the values and simplifying the formula:
-;;
-;; (render (- (* (- (* (- (* 'pv 'i) 'pmt) 'i) 'pmt) 'i) 'pmt))
-;; => "i³ pv - i² pmt - i pmt - pmt"
-;;
-;; The general balance formula is:
-;;
-;; = iᵏ p₀ + i⁽ᵏ⁻¹⁾ p₁ + ... pₖ
-;;
-;; Where p₀ = present value, and p₁...pₖ = pmt.
-;; We can interpret the present value (principal) as a payment w/ inverted sign.
 
 (defn pmt [f n]
   (/ (- (f 1) 1)
@@ -216,13 +263,6 @@
 ;; (/ (+ (* 1000 3 0.1) 1000) 3) => 433.3333333333333
 ;; (/ (+ (* 1000 3 0.1) (* -1000 0.1) 1000) 3) => 400.0
 ;; (/ (+ (* 1000 3 0.1) (* 2 -1000 0.1) 1000) 3) => 366.6666666666667
-;;
-;; (render (/ (+ (* 'pv 'n 'i) (* 2 (- 'pv) 'i) 'pv) 'n))
-;; => "(-2 i pv + i n pv + pv) /n"
-;; 
-;; The general formula for the k'th payment is:
-;;
-;; (-k i pv + i n pv + pv) / n
 
 (defn straight
   ([i n pv]
@@ -249,7 +289,7 @@
         debit  (- amounts)}))))
 
 (defn run-sheet [n s]
-  (fmap #(take n (s/partial-sums %)) s))
+  (fmap #(s/sum % n) s))
 
 (comment
   (let [t (straight 0.1 3 1000)]
