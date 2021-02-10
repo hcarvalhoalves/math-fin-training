@@ -2,7 +2,7 @@
 #+AUTHOR: Henrique Carvalho Alves
 #+EMAIL: henrique.alves@nubank.com.br
 #+LANGUAGE: pt
-#+LATEX_HEADER: \usepackage{parskip} \usepackage{amsmath} \usepackage[AUTO]{babel} \usepackage{tikz}
+#+LATEX_HEADER: \usepackage{parskip} \usepackage{amsmath} \usepackage[AUTO]{babel} \usepackage{tikz} \usepackage{titlesec}
 #+PROPERTY: header-args :exports both :session *my-book*
 
 #+NAME: init
@@ -17,7 +17,9 @@
 (set! *math-context* (java.math.MathContext. 5 java.math.RoundingMode/HALF_EVEN))
 #+end_src
 
-\newpage
+#+begin_export latex
+\newcommand{\sectionbreak}{\clearpage}
+#+end_export
 
 * Juros
 ** Fundamentos
@@ -317,7 +319,8 @@
     #+RESULTS:
     : true
 
-    \newpage
+    ${\newpage}$
+    
 ** Taxas variáveis
 
    Quando a taxa de juros varia ao longo do tempo, podemos generalizar o fator de capitalização para um vetor de taxas $i$ indexado pelo período $n$:
@@ -441,19 +444,19 @@
 
    #+RESULTS:
    #+begin_export latex
-   \begin{align*}i &= \left(1 + i_1\,\left(1 - j_1\right)\right)\,\left(1 + i_2\,\left(1 - j_2\right)\right)\,\left(1 + i_3\,\left(1 - j_3\right)\right) - 1\end{align*}
+   \begin{align*}i_e &= \left(1 + i_1\,\left(1 - t_1\right)\right)\,\left(1 + i_2\,\left(1 - t_2\right)\right)\,\left(1 + i_3\,\left(1 - t_3\right)\right) - 1\end{align*}
    #+end_export
-
-   \newpage  
    
 * Capital
 ** Fluxo de caixa
 
-   Denomina-se *fluxo de caixa* o conjunto de entradas e saídas de capitais de uma operação ao longo do tempo. É útil representá-lo de forma gráfica com o *diagrama de fluxo de caixa*.
+   Denomina-se *fluxo de caixa*, de forma genérica, o conjunto de entradas e saídas de capitais de uma operação ao longo do tempo.
+
+   É útil representá-lo graficamente com o *diagrama de fluxo de caixa*, onde o eixo horizontal representa a dimensão (normalmente implícita) do tempo.
 
    *Exemplo:*
 
-   Entrada de $PV$:
+   ${CF_1 = PV}$
    #+begin_src clojure :results latex :exports results
 (cashflow {0 ['PV nil] 'n [nil nil]})
    #+end_src
@@ -463,7 +466,7 @@
    \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);\draw[->](0.0,0)node[below]{$0$}-- ++(0,0.8)node[above]{${PV}$};;;;;\draw[-](8.0,0)node[below]{$n$}\end{tikzpicture}\end{center}
    #+end_export
 
-   Saída de $FV$ em $n$ períodos:
+   ${CF_2 = -FV}$
    #+begin_src clojure :results latex :exports results
 (cashflow {0 [nil nil] 'n [nil 'FV]})
    #+end_src
@@ -473,7 +476,7 @@
    \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);;;\draw[-](0.0,0)node[below]{$0$};;\draw[->](8.0,0)node[above]{$n$}-- ++(0,-0.8)node[below]{${FV}$};\end{tikzpicture}\end{center}
    #+end_export
 
-   Entrada de $PV$, saída de $FV$ em $n$ períodos:
+   ${CF_3 = CF_1 + CF_2 = PV - FV}$
    #+begin_src clojure :results latex :exports results
 (cashflow {0 ['PV nil] 'n [nil 'FV]})
    #+end_src
@@ -483,25 +486,7 @@
    \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);\draw[->](0.0,0)node[below]{$0$}-- ++(0,0.8)node[above]{${PV}$};;;;\draw[->](8.0,0)node[above]{$n$}-- ++(0,-0.8)node[below]{${FV}$};\end{tikzpicture}\end{center}
    #+end_export
 
-   Sequência de entradas:
-   #+begin_src clojure :results latex :exports results
-(cashflow {0 ['C_1 nil] 1 ['C_2 nil] 2 ['C_3 nil] 'n ['C_n nil]})
-   #+end_src
-
-   #+RESULTS:
-   #+begin_export latex
-   \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);\draw[->](0.0,0)node[below]{$0$}-- ++(0,0.8)node[above]{$C_1$};;;\draw[->](2.6666667,0)node[below]{$1$}-- ++(0,0.8)node[above]{$C_2$};;;\draw[->](5.333333492279053,0)node[below]{$2$}-- ++(0,0.8)node[above]{$C_3$};;;\draw[->](8.000000238418579,0)node[below]{$n$}-- ++(0,0.8)node[above]{$C_n$};;\end{tikzpicture}\end{center}
-   #+end_export
-
-   Sequência de saídas:
-   #+begin_src clojure :results latex :exports results
-(cashflow {0 [nil 'C_1] 1 [nil 'C_2] 2 [nil 'C_3] 'n [nil 'C_n]})
-   #+end_src
-
-   #+RESULTS:
-   #+begin_export latex
-   \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);;\draw[->](0.0,0)node[above]{$0$}-- ++(0,-0.8)node[below]{$C_1$};;;\draw[->](2.6666667,0)node[above]{$1$}-- ++(0,-0.8)node[below]{$C_2$};;;\draw[->](5.333333492279053,0)node[above]{$2$}-- ++(0,-0.8)node[below]{$C_3$};;;\draw[->](8.000000238418579,0)node[above]{$n$}-- ++(0,-0.8)node[below]{$C_n$};\end{tikzpicture}\end{center}
-   #+end_export
+   Com isso demonstramos (algebricamente e graficamente) a propriedade transitiva dos fluxos de caixa.
 
 ** Capitais equivalentes
 
@@ -562,13 +547,40 @@
    \begin{align}i &= \begin{bmatrix}\displaystyle{i_1}&\displaystyle{i_2}&\displaystyle{\ldots}&\displaystyle{i_n}\end{bmatrix}\\C_2 &= C_1\,\left(1 + i_1\right)\,\left(1 + i_2\right)\,\left(1 + \ldots\right)\,\left(1 + i_n\right)\\C_1 &= \frac{C_2}{\left(1 + i_1\right)\,\left(1 + i_2\right)\,\left(1 + \ldots\right)\,\left(1 + i_n\right)}\end{align}
    #+end_export
 
-   ... ou de forma geral, para qualquer *fator de capitalização* $r$ em função do período $n$:
+   ... ou de forma geral, para qualquer *fator de capitalização* $f$ em função do período $n$:
    #+begin_src clojure :results latex :exports results
-(align (eq 'C_2 (fv (literal-function 'r) 'n 'C_1))
-       (eq 'C_1 (pv (literal-function 'r) 'n 'C_2)))
+(align (eq 'C_2 (fv (literal-function 'f) 'n 'C_1))
+       (eq 'C_1 (pv (literal-function 'f) 'n 'C_2)))
    #+end_src
 
    #+RESULTS:
    #+begin_export latex
-   \begin{align}C_2 &= C_1\,r\left(n\right)\\C_1 &= \frac{C_2}{r\left(n\right)}\end{align}
+   \begin{align*}C_2 = C_1\,f\left(n\right)\\C_1 = \frac{C_2}{f\left(n\right)}\end{align*}
    #+end_export
+
+*** Valor do capital no tempo
+
+    Analogamente, se consideramos o mesmo capital $C$ em dois fluxos de caixa distintos:
+
+    #+begin_src clojure :results latex :exports results
+(cashflow {0 ['C nil] 'n [nil nil]})
+    #+end_src
+
+    #+begin_src clojure :results latex :exports results
+(cashflow {0 [nil nil] 'n ['C nil]})
+    #+end_src
+
+    Então, para algum fator de capitalização $f$, e pela definição anterior de equivalência de capitais, obviamente valem as desigualdades:
+    #+begin_src clojure :results latex :exports results
+(align
+ (gt ((literal-function 'f) 'n) 0)
+ (lt 'C (fv (literal-function 'f) 'n 'C))
+ (gt 'C (pv (literal-function 'f) 'n 'C)))
+    #+end_src
+
+    #+RESULTS:
+    #+begin_export latex
+    \begin{align*}f\left(n\right) &> 0\\C &< C\,f\left(n\right)\\C &> \frac{C}{f\left(n\right)}\end{align*}
+    #+end_export
+
+    Ou seja, um capital de $ 1000 líquidos hoje vale mais do que $ 1000 no futuro pelo potencial de aplicação a uma taxa apropriada

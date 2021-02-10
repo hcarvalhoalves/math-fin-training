@@ -19,8 +19,8 @@
   ([eq]
    (str "\\begin{align*}"
         (-> (render* eq)
-            (clojure.string/replace "=" "\\\\&=")
-            (clojure.string/replace-first "\\\\&=" "&="))
+            (clojure.string/replace #"(=|>|<|\\geq|\\leq)" "\\\\\\\\&$1")
+            (clojure.string/replace-first #"\\\\&(=|>|<|\\geq|\\leq)" "&$1"))
         "\\end{align*}"))
   ([eq & eqs]
    (str "\\begin{align*}"
@@ -28,12 +28,12 @@
          "\\\\"
          (map (fn [eq]
                 (-> (render* eq)
-                    (clojure.string/replace "=" "\\\\&=")
-                    (clojure.string/replace-first "\\\\&=" "&=")))
+                    (clojure.string/replace #"(=|>|<|\\geq|\\leq)" "\\\\\\\\&$1")
+                    (clojure.string/replace-first #"\\\\&(=|>|<|\\geq|\\leq)" "&$1")))
               (into [eq] eqs)))
         "\\end{align*}")))
 
-(deftype Equation [args]
+(deftype Equation [sym args]
   Object
   (toString [this]
     (str (freeze this)))
@@ -41,10 +41,13 @@
   (kind [_]
     :sicmutils.expression/numeric)
   (freeze [_]
-    `(~'= ~@(map freeze args))))
+    `(~sym ~@(map freeze args))))
 
-(defn eq [& args]
-  (Equation. args))
+(defn eq [& args] (Equation. '= args))
+(defn gt [& args] (Equation. '> args))
+(defn lt [& args] (Equation. '< args))
+(defn gte [& args] (Equation. '>= args))
+(defn lte [& args] (Equation. '<= args))
 
 ;; (defmethod = [:sicmutils.expression/numeric :sicmutils.expression/numeric]
 ;;   [l r]
