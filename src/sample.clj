@@ -46,17 +46,15 @@
 (defn eq [& args]
   (Equation. args))
 
-(defmethod = [:sicmutils.expression/numeric :sicmutils.expression/numeric]
-  [l r]
-  (eq l r))
-
-(defmethod = [:sicmutils.expression/numeric :sicmutils.value/number]
-  [l r]
-  (eq l r))
-
-(defmethod = [:sicmutils.value/number :sicmutils.expression/numeric]
-  [l r]
-  (eq l r))
+;; (defmethod = [:sicmutils.expression/numeric :sicmutils.expression/numeric]
+;;   [l r]
+;;   (eq l r))
+;; (defmethod = [:sicmutils.expression/numeric :sicmutils.value/number]
+;;   [l r]
+;;   (eq l r))
+;; (defmethod = [:sicmutils.value/number :sicmutils.expression/numeric]
+;;   [l r]
+;;   (eq l r))
 
 (defn draw-cashflow [xs]
   (let [c         (max (count xs) 2)
@@ -106,13 +104,6 @@
 
 (defn cashflow [xs]
   (CashFlow. xs))
-
-(defmethod print-method sample.Equation [v ^java.io.Writer w]
-  (.write w (render v)))
-(defmethod print-method sample.CashFlow [v ^java.io.Writer w]
-  (.write w (draw-cashflow (freeze v))))
-(defmethod print-method sicmutils.expression.Literal [v ^java.io.Writer w]
-  (.write w (render v)))
 
 ;;;; Interest
 

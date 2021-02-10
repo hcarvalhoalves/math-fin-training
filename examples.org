@@ -3,12 +3,18 @@
 #+EMAIL: henrique.alves@nubank.com.br
 #+LANGUAGE: pt
 #+LATEX_HEADER: \usepackage{parskip} \usepackage{amsmath} \usepackage[AUTO]{babel} \usepackage{tikz}
-#+PROPERTY: header-args :exports both
-#+begin_src clojure :exports none :results silent
-(use 'sample)
-(use 'sicmutils.env)
-(import 'java.math.MathContext)
-(set! *math-context* (new java.math.MathContext 5 java.math.RoundingMode/HALF_EVEN))
+#+PROPERTY: header-args :exports both :session *my-book*
+
+#+NAME: init
+#+begin_src clojure :results silent :exports none
+(defmethod print-method sample.Equation [v ^java.io.Writer w]
+  (.write w (render v)))
+(defmethod print-method sample.CashFlow [v ^java.io.Writer w]
+  (.write w (draw-cashflow (freeze v))))
+(defmethod print-method sicmutils.expression.Literal [v ^java.io.Writer w]
+  (.write w (render v)))
+
+(set! *math-context* (java.math.MathContext. 5 java.math.RoundingMode/HALF_EVEN))
 #+end_src
 
 \newpage
@@ -16,7 +22,7 @@
 * Juros
 ** Fundamentos
    
-   Dado o capital (ou valor presente) ${PV}$, a taxa de juros (%) $i$, o juro $I$ e o saldo (ou valor futuro) $FV$, as relações fundamentais são:
+   Dado o capital (ou valor presente) ${PV}$, a taxa de juros (%) $i$, o juro $I$ e o montante (ou valor futuro) $FV$, as relações fundamentais são:
 
    #+begin_src clojure :results latex :exports results
 (align
@@ -43,7 +49,7 @@
    #+RESULTS:
    : 220.00M
 
-   O saldo ao fim do período é dado por:
+   O montante ao fim do período é dado por:
    #+begin_src clojure
 (* 1000 1.22M)
    #+end_src
@@ -68,36 +74,24 @@
    : 0.22M
 
    Nesse exemplo, o período da taxa $i$ e o período de aplicação foi o mesmo.
-
-** Fator de capitalização
-   
-   Para aplicações que duram $n$ períodos, podemos generalizar o *fator de capitalização* para qualquer $f$, obtendo:
-   #+begin_src clojure :results latex :exports results
-(align
- (eq 'I (simplify (interest (literal-function 'f) 'n 'PV)))
- (eq 'FV (fv (literal-function 'f) 'n 'PV))
- (eq 'PV (pv (literal-function 'f) 'n 'FV)))
-   #+end_src
-
-\newpage
-
+      
 ** Juros simples
 
-   É o regime de capitalização onde aplica-se a taxa $i$ a um mesmo capital $PV$ por $n$ períodos para obter o saldo $FV$:
+   É o regime de capitalização onde aplica-se a taxa $i$ a um mesmo capital $PV$ por $n$ períodos para obter o montante $FV$:
    #+begin_src clojure :results latex :exports results
 (align
- (eq 'I (simplify (interest (simple 'i) 'n 'PV)))
  (eq 'FV
      (* (i->series (simple 'i)) 'PV)
-     (fv (simple 'i) 'n 'PV)))
+     (fv (simple 'i) 'n 'PV))
+ (eq 'I (simplify (interest (simple 'i) 'n 'PV))))
    #+end_src
 
    #+RESULTS:
    #+begin_export latex
-   \begin{align}I &= {PV}\,i\,n\\{FV} &= {PV} + {PV}\,i + {PV}\,i + {PV}\,i + \ldots \\&= {PV}\,\left(1 + i\,n\right)\\{PV} &= \left(\frac{1}{{FV}}\right) + \left(\frac{i}{{FV}}\right) + \left(\frac{i}{{FV}}\right) + \left(\frac{i}{{FV}}\right) + \ldots \\&= \frac{{FV}}{1 + i\,n}\end{align}
+   \begin{align*}{FV} &= {PV} + {PV}\,i + {PV}\,i + {PV}\,i + \ldots \\&= {PV}\,\left(1 + i\,n\right)\\I &= {PV}\,i\,n\end{align*}
    #+end_export
 
-   Por analogia, faz-se a operação inversa para descontar a taxa $i$ do saldo $FV$ para obter o capital $PV$:
+   Por analogia, faz-se a operação inversa para descontar a taxa $i$ do montante $FV$ e obter o capital $PV$:
    #+begin_src clojure :results latex :exports results
 (align
  (eq 'PV
@@ -123,7 +117,7 @@
     \begin{align*}{FV} &= 1000 + 80.00 + 80.00 + 80.00 + \ldots\end{align*}
     #+end_export
 
-    Portanto o saldo ao fim de 3 meses equivale a:
+    Portanto o montante ao fim de 3 meses equivale a:
     #+begin_src clojure
 (* 1000 ((simple 0.08M) 3))
     #+end_src
@@ -131,7 +125,7 @@
     #+RESULTS:
     : 1240.0M
 
-    E o capital que equivale a este saldo (ou ainda, o valor futuro trazido a valor presente) na mesma taxa é:
+    E o capital que equivale a este montante (ou ainda, o valor futuro trazido a valor presente) na mesma taxa é:
     #+begin_src clojure
 (/ 1240 ((simple 0.08M) 3))
     #+end_src
@@ -141,7 +135,7 @@
 
 ** Juros compostos
 
-   É o regime de capitalização onde aplica-se a taxa $i$ sobre o capital $PV$, e então torna-se a aplicar a taxa $i$ sobre /este/ saldo, e assim por diante, um $n$ número de vezes, até obter o saldo $FV$:
+   É o regime de capitalização onde aplica-se a taxa $i$ sobre o capital $PV$, e então torna-se a aplicar a taxa $i$ sobre /este/ montante, e assim por diante, um $n$ número de vezes, até obter o montante $FV$:
    #+begin_src clojure :results latex :exports results
 (align
   (eq 'FV
@@ -155,7 +149,7 @@
    \begin{align*}{FV} &= {PV} + {PV}\,i + \left({PV}\,{i}^{2} + 2\,{PV}\,i\right) + \left({PV}\,{i}^{3} + 3\,{PV}\,{i}^{2} + 3\,{PV}\,i\right) + \ldots \\&= {PV}\,{\left(1 + i\right)}^{n}\end{align*}
    #+end_export
    
-   Por analogia, faz-se a operação inversa para descontar a taxa $i$ do saldo $FV$ para obter o capital $PV$:
+   Por analogia, faz-se a operação inversa para descontar a taxa $i$ do montante $FV$ e obter o capital $PV$:
    #+begin_src clojure :results latex :exports results
 (align
  (eq 'PV
@@ -163,7 +157,7 @@
      (pv (compound 'i) 'n 'FV)))
    #+end_src
 
-   Portanto, o *fator de capitalização* para juros compostos é a função não-linear:
+   Portanto, diferente dos juros simples, o *fator de capitalização* para juros compostos é a função /não-linear/:
    #+begin_src clojure :results latex :exports results
 (align
  (eq ((literal-function 'f) 'n) ((compound 'i) 'n)))
@@ -181,7 +175,7 @@
    \begin{align*}{FV} &= 1000 + 80.00 + 166.40 + 259.70 + \ldots\end{align*}
    #+end_export
 
-   Portanto o saldo ao fim de 3 meses equivale a:
+   Portanto o montante ao fim de 3 meses equivale a:
    #+begin_src clojure
 (* 1000 ((compound 0.08M) 3))
    #+end_src
@@ -189,7 +183,7 @@
    #+RESULTS:
    : 1259.7M
 
-    E o capital que equivale a este saldo (ou ainda, o valor futuro trazido a valor presente) na mesma taxa é:
+    E o capital que equivale a este montante (ou ainda, o valor futuro trazido a valor presente) na mesma taxa é:
     #+begin_src clojure
 (/ 1259.7M ((compound 0.08M) 3))
     #+end_src
@@ -197,109 +191,157 @@
     #+RESULTS:
     : 1E+3M
 
-*** Equivalência de taxas
+** Fator de capitalização
+    
+   Para aplicações que duram $n$ períodos, podemos generalizar substituindo a taxa $i$ por outro *fator de capitalização* qualquer $f$ em função de $n$, obtendo:
+   #+begin_src clojure :results latex :exports results
+(align
+ (eq ((literal-function 'I) 'n) (simplify (interest (literal-function 'f) 'n 'PV)))
+ (eq ((literal-function 'FV) 'n) (fv (literal-function 'f) 'n 'PV))
+ (eq ((literal-function 'PV) 'n) (pv (literal-function 'f) 'n 'FV)))
+   #+end_src
+
+   *Exemplo:*
+
+   Uma capital de $ 1000 é aplicado à uma taxa progressiva de 2%, 4%, 6%, 8%, ... ao ano, conforme o tempo em que permanece aplicado. Qual será o montante para cada ano aplicado, durante os 5 primeiros anos?
+
+   O fator de capitalização para essa taxa progressiva é dado por:
+   #+begin_src clojure :results latex :exports results
+(align
+ (eq 'i 0.02)
+ (eq ((literal-function 'f) 'n) (+ 1 (* 'i (expt 'n 2)))))
+   #+end_src
+
+   #+RESULTS:
+   #+begin_export latex
+   \begin{align*}i &= 0.02\\f\left(n\right) &= 1 + i\,{n}^{2}\end{align*}
+   #+end_export
+
+   Portanto:
+   #+begin_src clojure :results verbatim
+(let [f (fn [n] (+ 1 (* 0.02M (expt n 2))))]
+  (mapv #(fv f % 1000) (range 1 6)))
+   #+end_src
+
+   #+RESULTS:
+   : [1020.0M 1080.0M 1180.0M 1320.0M 1500.0M]
    
-    São equivalentes as taxas $i_1$ e $i_2$ se, aplicadas nos períodos $p_1$ e $p_2$ relativos a duração das respectivas taxas, resultam no mesmo valor futuro $FV$.
+*** Taxa efetiva
+    
+    Quando generalizamos o *fator de capitalização*, a fórmula para inferir a taxa $i$ agora nos dá a chamada *taxa efetiva*:
     #+begin_src clojure :results latex :exports results
-(align (eq 'FV (fv (compound 'i_1) 'p_1 'PV) (fv (compound 'i_2) 'p_2 'PV)))
+(align
+ (eq 'i_e (rate 'FV 'PV)))
+    #+end_src
+
+    *Exemplo:*
+
+    Um capital de $ 1000 foi aplicado à taxa nominal de 12% ao ano durante 12 meses a juros compostos. Qual foi a taxa efetiva neste ano?
+
+    #+begin_src clojure
+(rate ((compound (/ 0.12M 12)) 12))
+    #+end_src
+
+    #+RESULTS:
+    : 0.1268M
+
+*** Taxa equivalente
+   
+    São equivalentes as taxas nominais $i_1$ e $i_2$ se, aplicadas nos períodos $n_1$ e $n_2$ relativos a duração das respectivas taxas, resultam no mesmo valor:
+    #+begin_src clojure :results latex :exports results
+(align
+ (eq 'FV
+     (fv (literal-function 'f_i_1) 'n_1 'PV)
+     (fv (literal-function 'f_i_2) 'n_2 'PV))
+ (eq ((literal-function 'f_i_1) 'n_1)
+     ((literal-function 'f_i_2) 'n_2)))
     #+end_src
 
     #+RESULTS:
     #+begin_export latex
-    \begin{align*}{FV} &= {PV}\,{\left(1 + i_1\right)}^{p_1} \\&= {PV}\,{\left(1 + i_2\right)}^{p_2}\end{align*}
-    #+end_export
-
-    Simplificando:
-    #+begin_src clojure :results latex :exports results
-(align (eq (simplify (interest (compound 'i_1) 'p_1 1))
-           (simplify (interest (compound 'i_2) 'p_2 1))))
-    #+end_src
-
-    #+RESULTS:
-    #+begin_export latex
-    \begin{align*}{\left(i_1 + 1\right)}^{p_1} + -1 &= {\left(i_2 + 1\right)}^{p_2} + -1\end{align*}
+    \begin{align*}{FV} &= {PV}\,{f_i}_1\left(p_1\right) \\&= {PV}\,{f_i}_2\left(p_2\right)\\{f_i}_1\left(p_1\right) &= {f_i}_2\left(p_2\right)\end{align*}
     #+end_export
 
     *Exemplo:*
 
-    Qual a taxa mensal equivalente a 12.55% ao ano em juros compostos?
+    Qual a taxa mensal equivalente a 21% ao ano...
+
+    ... a juros simples?
     #+begin_src clojure
-(- (expt (+ 0.1255M 1) 1/12) 1)
+(* 0.21M 1/12)
     #+end_src
 
     #+RESULTS:
-    : 0.009900975291211367
+    : 0.017500M
 
     Prova:
+    #+begin_src clojure :results latex :exports results
+(align
+ (eq
+  (rate ((simple 'i_1) 1/12))
+  (rate ((simple 'i_2) 12))))
+    #+end_src
+   
     #+begin_src clojure
-(rate ((compound 0.0099M) 12))
+(rate ((simple 0.017500M) 12))
     #+end_src
 
     #+RESULTS:
-    : 0.1255M
+    : true
+
+    ... a juros compostos?
+    #+begin_src clojure
+(- (expt (+ 1 0.21M) 1/12) 1)
+    #+end_src
+
+    #+RESULTS:
+    : 0.016011867773387367
+
+    Prova:
+    #+begin_src clojure :results latex :exports results
+(align
+ (eq
+  (rate ((compound 'i_1) 1/12))
+  (rate ((compound 'i_2) 12))))
+    #+end_src
+
+    #+RESULTS:
+    #+begin_export latex
+    ${\left(1 + i_1\right)}^{\frac{1}{12}} - 1 = {\left(1 + i_2\right)}^{12} - 1$
+    #+end_export
+
+    #+begin_src clojure
+(rate ((compound 0.01602M) 12))
+    #+end_src
+
+    #+RESULTS:
+    : true
 
     \newpage
-
-** Taxas equivalentes
-   
-   São equivalentes as taxas $i_1$ e $i_2$ se, aplicadas nos períodos $p_1$ e $p_2$ relativos a duração das respectivas taxas, resultam no mesmo valor futuro $FV$.
-   #+begin_src clojure :results latex :exports results
-(align (eq 'FV (fv (simple 'i_1) 'p_1 'PV) (fv (simple 'i_2) 'p_2 'PV)))
-   #+end_src
-
-   #+RESULTS:
-   #+begin_export latex
-   \begin{align*}{FV} &= {PV}\,\left(1 + i_1\,p_1\right) \\&= {PV}\,\left(1 + i_2\,p_2\right)\end{align*}
-   #+end_export
-
-   Simplificando:
-   #+begin_src clojure :results latex :exports results
-(align (eq (simplify (interest (simple 'i_1) 'p_1 1))
-           (simplify (interest (simple 'i_2) 'p_2 1))))
-   #+end_src
-
-   #+RESULTS:
-   #+begin_export latex
-   \begin{align*}i_1\,p_1 &= i_2\,p_2\end{align*}
-   #+end_export
-
-   *Exemplo:*
-
-   Qual a taxa mensal equivalente a 21% ao ano em juros simples?
-   #+begin_src clojure
-(* 0.21M 1/12)
-   #+end_src
-
-   #+RESULTS:
-   : 0.017500M
-
-   Prova:
-   #+begin_src clojure
-(rate ((simple 0.017500M) 12))
-   #+end_src
-
-   #+RESULTS:
-   : 0.2100M
-
-   \
 ** Taxas variáveis
 
-   Quando a taxa de juros não permanece constante a cada período, podemos generalizar as fórmulas do valor futuro $FV$ e juro $I$ para um vetor $i$.
-    
-   Para isso, partimos da definição da taxa efetiva $i_e$, que equivale a aplicar a taxa de cada período consecutivamente, e então substituindo $i$ nas outras fórmulas obtemos:
+   Quando a taxa de juros varia ao longo do tempo, podemos generalizar o fator de capitalização para um vetor de taxas $i$ indexado pelo período $n$:
    #+begin_src clojure :results latex :exports results
 (let [i ['i_1 'i_2 'i_3 '... 'i_n]
       accfn (compound-index i)]
   (align
    (eq 'i (apply down i))
-   (eq 'i_e
-       (interest accfn 'n 1))
-   (eq 'FV
-       (fv (constantly 'i_e) 1 'PV)
-       (fv accfn 'n 'PV))
-   (eq 'I
-       (interest (constantly 'i_e) 1 'PV)
-       (interest accfn 'n 'PV))))
+   (eq ((literal-function 'f) 'n) ((compound-index i) 'n))))
+   #+end_src
+
+   #+RESULTS:
+   #+begin_export latex
+   \begin{align*}i &= \begin{bmatrix}\displaystyle{i_1}&\displaystyle{i_2}&\displaystyle{i_3}&\displaystyle{\ldots}&\displaystyle{i_n}\end{bmatrix}\\f\left(n\right) &= \left(1 + i_1\right)\,\left(1 + i_2\right)\,\left(1 + i_3\right)\,\left(1 + \ldots\right)\,\left(1 + i_n\right)\end{align*}
+   #+end_export
+    
+   Substituindo nas relações fundamentais:
+   #+begin_src clojure :results latex :exports results
+(let [i ['i_1 'i_2 'i_3 '... 'i_n]
+      accfn (compound-index i)]
+  (align
+   (eq 'FV (fv accfn 'n 'PV))
+   (eq 'PV (pv accfn 'n 'FV))
+   (eq 'I (interest accfn 'n 'PV))))
    #+end_src
 
    #+RESULTS:
@@ -311,7 +353,7 @@
 
    Em três meses consecutivos, uma aplicação de $ 16000 rendeu 1.3%, 1.7% e 2.1%.
 
-   Qual o valor ($) do rendimento?
+   Qual o valor do rendimento?
    #+begin_src clojure
 (let [i (compound-index [0.013M 0.017M 0.021M])]
   (interest i 3 16000))
@@ -320,7 +362,7 @@
    #+RESULTS:
    : 828.80M
 
-   Qual a rentabilidade (%) no trimestre?
+   Qual a taxa efetiva no trimestre?
    #+begin_src clojure
 (let [c 16000
       i (compound-index [0.013M 0.017M 0.021M])]
@@ -341,7 +383,7 @@
 
 ** Taxas corrigidas
 
-   É possível corrigir uma taxa $i$ por um índice $j_n$ com a fórmula:
+   Quando precisamos corrigir uma taxa $i$ por outra taxa $j$ indexada pelo período $n$, podemos fazer com o produto:
    #+begin_src clojure :results latex :exports results
 (align
  (eq 'j (down 'j_1 'j_2 'j_3 '... 'j_n))
@@ -353,9 +395,11 @@
    \begin{align}j &= \begin{bmatrix}\displaystyle{j_1}&\displaystyle{j_2}&\displaystyle{j_3}&\displaystyle{\ldots}&\displaystyle{j_n}\end{bmatrix}\\I &= \left(1 + i\,j_1\right)\,\left(1 + i\,j_2\right)\,\left(1 + i\,j_3\right)\,\left(1 + i\,\ldots\right)\,\left(1 + i\,j_n\right)\end{align}
    #+end_export
 
-   Generalizando para $i_n$:
+   Ou ainda, generalizando para $i$ indexado por $n$:
    #+begin_src clojure :results latex :exports results
-(align (eq 'I ((compound-index (mapv * ['i_1 'i_2 'i_3 '... 'i_n] ['j_1 'j_2 'j_3 '... 'j_n])) 'n)))
+(align
+ (eq 'i (down 'i_1 'i_2 'i_3 '... 'i_n))
+ (eq 'I ((compound-index (mapv * ['i_1 'i_2 'i_3 '... 'i_n] ['j_1 'j_2 'j_3 '... 'j_n])) 'n)))
    #+end_src
 
    #+RESULTS:
@@ -365,29 +409,39 @@
 
    *Exemplo:*
 
-   Em três semestres consecutivos, uma aplicação rendeu 1.3%, 1.7% e 2.1%. Sabendo que o imposto de renda segue alíquotas semestrais progressivas de 22.5%, 20% e 17.5%, o rendimento ($) líquido é:
-   #+begin_src clojure
-(let [rates [0.013M 0.017M 0.021M]
+   Em três semestres consecutivos uma aplicação rendeu 1%, 2% e 5%, e sabendo que o imposto de renda segue alíquotas semestrais progressivas de 22.5%, 20% e 17.5%, qual foi a taxa de rendimento líquido?
+
+   Primeiro, calculamos a taxa real de rendimento de cada mês, considerando o imposto de renda:
+   #+begin_src clojure :results verbatim
+(let [interest [0.01M 0.02M 0.05M]
       ;; Recolher a alíquota equivale a render (1 - alíquota)
-      tax [(- 1 0.225) (- 1 0.20) (- 1 0.175)]
-      i (compound-index (mapv * rates tax))]
-  (interest i 3 16000))
+      tax [(- 1 0.225M) (- 1 0.20M) (- 1 0.175M)]]
+  (mapv * interest tax))
    #+end_src
 
    #+RESULTS:
-   : 664.7930119440026
+   : [0.00775M 0.0160M 0.04125M]
+
+   Então calculamos a taxa efetiva nos três semestres:
+   #+begin_src clojure
+(let [i (compound-index [0.00775M 0.0160M 0.04125M])]
+  (rate (i 3)))
+   #+end_src
+
+   #+RESULTS:
+   : 0.0661M
 
    Provando pela definição:
    #+begin_src clojure :results latex
-(let [rates ['i_1 'i_2 'i_3]
-      tax [(- 1 'j_1) (- 1 'j_2) (- 1 'j_3)]
-      i (compound-index (mapv * rates tax))]
-  (interest i 'n 'PV))
+(let [interest ['i_1 'i_2 'i_3]
+      tax [(- 1 't_1) (- 1 't_2) (- 1 't_3)]
+      i (compound-index (mapv * interest tax))]
+  (align (eq 'i_e (rate (i 'n)))))
    #+end_src
 
    #+RESULTS:
    #+begin_export latex
-   ${PV}\,\left(\left(1 + i_1\,\left(1 - j_1\right)\right)\,\left(1 + i_2\,\left(1 - j_2\right)\right)\,\left(1 + i_3\,\left(1 - j_3\right)\right) - 1\right)$
+   \begin{align*}i &= \left(1 + i_1\,\left(1 - j_1\right)\right)\,\left(1 + i_2\,\left(1 - j_2\right)\right)\,\left(1 + i_3\,\left(1 - j_3\right)\right) - 1\end{align*}
    #+end_export
 
    \newpage  
