@@ -202,6 +202,12 @@
 (defn i->series [f]
   (s/generate (term f) :sicmutils.series/series))
 
+(defn fn->series [fn]
+  (s/generate fn :sicmutils.series/series))
+
+(comment
+  (->infix (fn->series #(pv (compound 'i) % (nth [(- 'C_0) 'C_1 'C_2 'C_3 'C_4] %)))))
+            
 ;;;; Amortization methods
 
 ;; Derivation of formula for Price (aka French or Loan-style) amortization method
