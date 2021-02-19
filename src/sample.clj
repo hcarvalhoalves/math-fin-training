@@ -73,14 +73,14 @@
                              (str arrow
                                   (h-spacing idx)
                                   (node -1 n)
-                                  "-- ++"
+                                  " -- ++"
                                   (v-spacing 1)
                                   (node 1 in)))
                            (when out
                              (str arrow
                                   (h-spacing idx)
                                   (node 1 n)
-                                  "-- ++"
+                                  " -- ++"
                                   (v-spacing -1)
                                   (node -1 out)))
                            (when (and (not in) (not out))
@@ -88,9 +88,9 @@
                                   (h-spacing idx)
                                   (node -1 n)))]))
                        (apply concat))]
-    (str "\\begin{center}\\begin{tikzpicture}\\draw[-] (0,0) -- (" h-max ",0);"
-         (clojure.string/join ";" arrows)
-         "\\end{tikzpicture}\\end{center}")))
+    (str "\\begin{center}\n\\begin{tikzpicture}\n\\draw[-](0,0) -- (" h-max ",0);\n"
+         (clojure.string/join ";\n" (remove nil? arrows))
+         "\n\\end{tikzpicture}\n\\end{center}\n")))
 
 (comment
   (draw-cashflow {0 [10 -10]}))
