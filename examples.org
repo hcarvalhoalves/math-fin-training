@@ -1,16 +1,17 @@
 #+TITLE: Fundamentos de Matemática Financeira (WIP)
+#+SUBTITLE: Uma abordagem interativa em Clojure
 #+AUTHOR: Henrique Carvalho Alves
 #+EMAIL: henrique.alves@nubank.com.br
-#+LANGUAGE: pt
+#+LANGUAGE: pt_BR
 #+PROPERTY: header-args :exports both :session *my-book*
-#+PROPERTY: header-args:latex+ :packages '(("" "tikz"))
-#+PROPERTY: header-args:latex+ :imagemagick yes :fit yes
+#+OPTIONS: tex:dvisvgm
+#+OPTIONS: html-postamble:nil
+#+STARTUP: nolatexpreview
 #+LATEX_HEADER: \usepackage{parskip}
 #+LATEX_HEADER: \usepackage{amsmath}
 #+LATEX_HEADER: \usepackage[AUTO]{babel}
 #+LATEX_HEADER: \usepackage{tikz}
-#+OPTIONS: tex:imagemagick
-#+STARTUP: nolatexpreview
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="org.css"/>
 
 #+NAME: init
 #+begin_src clojure :results silent :exports none
@@ -23,6 +24,13 @@
 
 (set! *math-context* (java.math.MathContext. 5 java.math.RoundingMode/HALF_EVEN))
 #+end_src
+
+* Introdução
+
+  O objetivo do livro é construir uma intuição de como derivar fórmulas para cálculos de juros, fluxos de caixa e sistemas de amortização a partir de relações básicas, ao mesmo tempo em que demonstra como implementar em uma linguagem de programação.
+
+  Este livro acompanha código-fonte na linguagem =clojure=, que serve de suporte para as demonstrações e implementa as funções básicas de matemática financeira.
+  Todas as fórmulas incluídas no livro são geradas a partir da definição canônica destas funções, e renderizadas em LaTeX utilizando a biblioteca =sicmutils=. O código-fonte do próprio livro está disponível em formato =org-mode= para =emacs=, e pode ser explorado de forma interativa seguindo as instruções de instalação.
 
 * Juros
 ** Fundamentos
@@ -270,108 +278,146 @@
       #+RESULTS:
       : 0.50M
 
-** Taxa efetiva
+*** Frequência de capitalização
+
+    Quando a aplicação dura $n$ períodos, a *frequência de capitalização* dita quantas vezes o montante será reaplicado durante o prazo.
+
+    *Exemplo*:
+   
+    Assumindo uma taxa $i$ de 1% ao ano, analisamos o fator de capitalização com aplicações anuais, mensais e diárias.
+   
+    1. No caso do regime de juros simples, não há diferença entre frequências de capitalização diferentes.
+       #+begin_src clojure
+((simple 1) 1.0)
+((simple (/ 1 12)) 12.0)
+((simple (/ 1 360)) 360.0)
+((simple (/ 1 365)) 365.0)
+       #+end_src
+
+    2. No caso do regime de juros compostos, uma maior frequência de capitalização representa um rendimento maior:
+       #+begin_src clojure
+((compound 1) 1)
+((compound (/ 1 12)) 12.0)
+((compound (/ 1 360)) 360.0)
+((compound (/ 1 365)) 365.0)
+       #+end_src
+
+       É possível observar que conforme aumenta a frequência de capitalização, aproximamos a função exponencial:
+       #+begin_latex
+       \begin{align*} \lim_{n \to +\infty} f(n) &= (1 + i/n)^{n} \\ &= e^{n(i/n)} \\ &= e^i \end{align*}
+       #+end_latex
+
+       #+begin_src clojure
+((compound (/ 1 365)) 365.0)
+(exp 1)
+       #+end_src
+
+       #+RESULTS:
+       | 2.714567482021534 |
+       | 2.718281828459045 |
+
+*** Taxa efetiva
     
-   Quando generalizamos o *fator de capitalização*, a fórmula para inferir a taxa $i$ (apresentada anteriormente), agora nos dá a chamada *taxa efetiva*:
-   #+begin_src clojure :results value :wrap latex :exports results
+    Quando generalizamos o *fator de capitalização*, a fórmula para inferir a taxa $i$ (apresentada anteriormente), agora nos dá a chamada *taxa efetiva*:
+    #+begin_src clojure :results value :wrap latex :exports results
 (align
  (eq 'i_e (rate 'FV 'PV)))
-   #+end_src
+    #+end_src
 
-   #+RESULTS:
-   #+begin_latex
-   \begin{align*}i_e &= \left(\frac{{FV}}{{PV}}\right) - 1\end{align*}
-   #+end_latex
+    #+RESULTS:
+    #+begin_latex
+    \begin{align*}i_e &= \left(\frac{{FV}}{{PV}}\right) - 1\end{align*}
+    #+end_latex
     
-   *Exemplo:*
+    *Exemplo:*
 
-   Um capital de $ 1000 foi aplicado durante 12 meses a uma taxa nominal de 12% ao ano a juros compostos.
+    Um capital de $ 1000 foi aplicado durante 12 meses a uma taxa nominal de 12% ao ano a juros compostos.
 
-   Qual foi a taxa efetiva neste ano?
+    Qual foi a taxa efetiva neste ano?
 
-   #+begin_src clojure
+    #+begin_src clojure
 (rate ((compound (/ 0.12M 12)) 12))
-   #+end_src
+    #+end_src
 
-   #+RESULTS:
-   : 0.1268M
+    #+RESULTS:
+    : 0.1268M
 
-** Taxa equivalente
+*** Taxa equivalente
    
-   São equivalentes as taxas nominais $i_1$ e $i_2$ quando, aplicadas nos períodos $n_1$ e $n_2$ relativos a duração das respectivas taxas, resultam no mesmo valor:
-   #+begin_src clojure :results value :wrap latex :exports results
+    São equivalentes as taxas nominais $i_1$ e $i_2$ quando, aplicadas nos períodos $n_1$ e $n_2$ relativos a duração das respectivas taxas, resultam no mesmo valor:
+    #+begin_src clojure :results value :wrap latex :exports results
 (align
  (eq 'FV
      (fv (literal-function 'f_i_1) 'n_1 'PV)
      (fv (literal-function 'f_i_2) 'n_2 'PV))
  (eq ((literal-function 'f_i_1) 'n_1)
      ((literal-function 'f_i_2) 'n_2)))
-   #+end_src
+    #+end_src
 
-   #+RESULTS:
-   #+begin_latex
-   \begin{align*}{FV} &= {PV}\,{f_i}_1\left(n_1\right) \\&= {PV}\,{f_i}_2\left(n_2\right)\\{f_i}_1\left(n_1\right) &= {f_i}_2\left(n_2\right)\end{align*}
-   #+end_latex
+    #+RESULTS:
+    #+begin_latex
+    \begin{align*}{FV} &= {PV}\,{f_i}_1\left(n_1\right) \\&= {PV}\,{f_i}_2\left(n_2\right)\\{f_i}_1\left(n_1\right) &= {f_i}_2\left(n_2\right)\end{align*}
+    #+end_latex
 
-   *Exemplo:*
+    *Exemplo:*
 
-   Qual a taxa mensal equivalente a 21% ao ano:
+    Qual a taxa mensal equivalente a 21% ao ano:
 
-   1. A juros simples?
-      #+begin_src clojure
+    1. A juros simples?
+       #+begin_src clojure
 (* 0.21M 1/12)
-      #+end_src
+       #+end_src
 
-      #+RESULTS:
-      : 0.017500M
+       #+RESULTS:
+       : 0.017500M
 
-      Prova:
-      #+begin_src clojure :results value :wrap latex :exports results
+       Prova:
+       #+begin_src clojure :results value :wrap latex :exports results
 (align
  (eq
   (rate ((simple 'i_1) 1/12))
   (rate ((simple 'i_2) 12))))
-      #+end_src
+       #+end_src
 
-      #+RESULTS:
-      #+begin_latex
-      \begin{align*}\left(1 + i_1\,\frac{1}{12}\right) - 1 &= \left(1 + i_2\,12\right) - 1\end{align*}
-      #+end_latex
+       #+RESULTS:
+       #+begin_latex
+       \begin{align*}\left(1 + i_1\,\frac{1}{12}\right) - 1 &= \left(1 + i_2\,12\right) - 1\end{align*}
+       #+end_latex
       
-      #+begin_src clojure
+       #+begin_src clojure
 (rate ((simple 0.017500M) 12))
-      #+end_src
+       #+end_src
 
-      #+RESULTS:
-      : 0.2100M
+       #+RESULTS:
+       : 0.2100M
 
-   2. A juros compostos?
-      #+begin_src clojure
+    2. A juros compostos?
+       #+begin_src clojure
 (- (expt (+ 1 0.21M) 1/12) 1)
-      #+end_src
+       #+end_src
 
-      #+RESULTS:
-      : 0.016011867773387367
+       #+RESULTS:
+       : 0.016011867773387367
 
-      Prova:
-      #+begin_src clojure :results value :wrap latex :exports results
+       Prova:
+       #+begin_src clojure :results value :wrap latex :exports results
 (align
  (eq
   (rate ((compound 'i_1) 1/12))
   (rate ((compound 'i_2) 12))))
-      #+end_src
+       #+end_src
 
-      #+RESULTS:
-      #+begin_latex
-      \begin{align*}{\left(1 + i_1\right)}^{\frac{1}{12}} - 1 &= {\left(1 + i_2\right)}^{12} - 1\end{align*}
-      #+end_latex
+       #+RESULTS:
+       #+begin_latex
+       \begin{align*}{\left(1 + i_1\right)}^{\frac{1}{12}} - 1 &= {\left(1 + i_2\right)}^{12} - 1\end{align*}
+       #+end_latex
       
-      #+begin_src clojure
+       #+begin_src clojure
 (rate ((compound 0.01602M) 12))
-      #+end_src
+       #+end_src
 
-      #+RESULTS:
-      : 0.2100M
+       #+RESULTS:
+       : 0.2100M
     
 ** Taxas variáveis
 
@@ -553,128 +599,128 @@
    \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);;\draw[->](0.0,0)node[above]{$0$}-- ++(0,-0.8)node[below]{$C_0$};;\draw[->](2.6666667,0)node[below]{$n$}-- ++(0,0.8)node[above]{$C_n$};;;\draw[->](5.333333492279053,0)node[below]{$m$}-- ++(0,0.8)node[above]{$C_m$};;;\draw[->](8.000000238418579,0)node[below]{$o$}-- ++(0,0.8)node[above]{$C_o$};;\end{tikzpicture}\end{center}
    #+end_latex
 
-** Capitais equivalentes
+*** Capitais equivalentes
 
-   Considere os capitais $C_0$ e $C_n$ disponíveis no momento $0$ e $n$, respectivamente:
-   #+begin_src clojure :results value :wrap latex :exports results
+    Considere os capitais $C_0$ e $C_n$ disponíveis no momento $0$ e $n$, respectivamente:
+    #+begin_src clojure :results value :wrap latex :exports results
 (cashflow {0 ['C_0 nil] 'n [nil nil]})
-   #+end_src
+    #+end_src
 
-   #+RESULTS:
-   #+begin_latex
-   \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);\draw[->](0.0,0)node[below]{$0$}-- ++(0,0.8)node[above]{$C_0$};;;;;\draw[-](8.0,0)node[below]{$n$}\end{tikzpicture}\end{center}
-   #+end_latex
+    #+RESULTS:
+    #+begin_latex
+    \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);\draw[->](0.0,0)node[below]{$0$}-- ++(0,0.8)node[above]{$C_0$};;;;;\draw[-](8.0,0)node[below]{$n$}\end{tikzpicture}\end{center}
+    #+end_latex
 
-   #+begin_src clojure :results value :wrap latex :exports results
+    #+begin_src clojure :results value :wrap latex :exports results
 (cashflow {0 [nil nil] 'n ['C_n nil]})
-   #+end_src
+    #+end_src
 
-   #+RESULTS:
-   #+begin_latex
-   \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);;;\draw[-](0.0,0)node[below]{$0$};\draw[->](8.0,0)node[below]{$n$}-- ++(0,0.8)node[above]{$C_n$};;\end{tikzpicture}\end{center}
-   #+end_latex
+    #+RESULTS:
+    #+begin_latex
+    \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);;;\draw[-](0.0,0)node[below]{$0$};\draw[->](8.0,0)node[below]{$n$}-- ++(0,0.8)node[above]{$C_n$};;\end{tikzpicture}\end{center}
+    #+end_latex
 
-   Pelas definições anteriores de valor futuro e valor presente, serão equivalentes os capitais $C_0$ e $C_n$ quando, pela taxa $i$...
+    Pelas definições anteriores de valor futuro e valor presente, serão equivalentes os capitais $C_0$ e $C_n$ quando, pela taxa $i$...
 
-   1. a juros simples:
-      #+begin_src clojure :results value :wrap latex :exports results
+    1. a juros simples:
+       #+begin_src clojure :results value :wrap latex :exports results
 (align (eq 'C_n (fv (simple 'i) 'n 'C_0))
        (eq 'C_0 (pv (simple 'i) 'n 'C_n)))
-      #+end_src
+       #+end_src
 
-      #+RESULTS:
-      #+begin_latex
-      \begin{align*}C_n &= C_0\,\left(1 + i\,n\right)\\C_0 &= \frac{C_n}{1 + i\,n}\end{align*}
-      #+end_latex
+       #+RESULTS:
+       #+begin_latex
+       \begin{align*}C_n &= C_0\,\left(1 + i\,n\right)\\C_0 &= \frac{C_n}{1 + i\,n}\end{align*}
+       #+end_latex
 
-   2. a juros compostos:
-      #+begin_src clojure :results value :wrap latex :exports results
+    2. a juros compostos:
+       #+begin_src clojure :results value :wrap latex :exports results
 (align (eq 'C_n (fv (compound 'i) 'n 'C_0))
        (eq 'C_0 (pv (compound 'i) 'n 'C_n)))
-      #+end_src
+       #+end_src
 
-      #+RESULTS:
-      #+begin_latex
-      \begin{align*}C_n &= C_0\,{\left(1 + i\right)}^{n}\\C_0 &= \frac{C_n}{{\left(1 + i\right)}^{n}}\end{align*}
-      #+end_latex
+       #+RESULTS:
+       #+begin_latex
+       \begin{align*}C_n &= C_0\,{\left(1 + i\right)}^{n}\\C_0 &= \frac{C_n}{{\left(1 + i\right)}^{n}}\end{align*}
+       #+end_latex
 
-   3. variável:
-      #+begin_src clojure :results value :wrap latex :exports results
+    3. variável:
+       #+begin_src clojure :results value :wrap latex :exports results
 (let [i (down 'i_1 'i_2 '... 'i_n)]
   (align
    (eq 'i i)
    (eq 'C_n (fv (compound-index i) 'n 'C_0))
    (eq 'C_0 (pv (compound-index i) 'n 'C_n))))
-      #+end_src
+       #+end_src
 
-      #+RESULTS:
-      #+begin_latex
-      \begin{align*}i &= \begin{bmatrix}\displaystyle{i_1}&\displaystyle{i_2}&\displaystyle{\ldots}&\displaystyle{i_n}\end{bmatrix}\\C_n &= C_0\,\left(1 + i_1\right)\,\left(1 + i_2\right)\,\left(1 + \ldots\right)\,\left(1 + i_n\right)\\C_0 &= \frac{C_n}{\left(1 + i_1\right)\,\left(1 + i_2\right)\,\left(1 + \ldots\right)\,\left(1 + i_n\right)}\end{align*}
-      #+end_latex
+       #+RESULTS:
+       #+begin_latex
+       \begin{align*}i &= \begin{bmatrix}\displaystyle{i_1}&\displaystyle{i_2}&\displaystyle{\ldots}&\displaystyle{i_n}\end{bmatrix}\\C_n &= C_0\,\left(1 + i_1\right)\,\left(1 + i_2\right)\,\left(1 + \ldots\right)\,\left(1 + i_n\right)\\C_0 &= \frac{C_n}{\left(1 + i_1\right)\,\left(1 + i_2\right)\,\left(1 + \ldots\right)\,\left(1 + i_n\right)}\end{align*}
+       #+end_latex
 
-   Ou de forma geral, para qualquer fator de capitalização $f$:
-   #+begin_src clojure :results value :wrap latex :exports results
+    Ou de forma geral, para qualquer fator de capitalização $f$:
+    #+begin_src clojure :results value :wrap latex :exports results
 (align (eq 'C_n (fv (literal-function 'f) 'n 'C_0))
        (eq 'C_0 (pv (literal-function 'f) 'n 'C_n)))
-   #+end_src
+    #+end_src
 
-   #+RESULTS:
-   #+begin_latex
-   \begin{align*}C_n &= C_0\,f\left(n\right)\\C_0 &= \frac{C_n}{f\left(n\right)}\end{align*}
-   #+end_latex
+    #+RESULTS:
+    #+begin_latex
+    \begin{align*}C_n &= C_0\,f\left(n\right)\\C_0 &= \frac{C_n}{f\left(n\right)}\end{align*}
+    #+end_latex
 
-*** Valor do capital no tempo
+**** Valor do capital no tempo
 
-    Por analogia, se considerarmos o mesmo capital $C$ em dois fluxos de caixa distintos...
-    #+begin_src clojure :results value :wrap latex :exports results
+     Por analogia, se considerarmos o mesmo capital $C$ em dois fluxos de caixa distintos...
+     #+begin_src clojure :results value :wrap latex :exports results
 (cashflow {0 ['C nil] 'n [nil nil]})
-    #+end_src
+     #+end_src
 
-    #+RESULTS:
-    #+begin_latex
-    \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);\draw[->](0.0,0)node[below]{$0$}-- ++(0,0.8)node[above]{$C$};;;;;\draw[-](8.0,0)node[below]{$n$}\end{tikzpicture}\end{center}
-    #+end_latex
+     #+RESULTS:
+     #+begin_latex
+     \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);\draw[->](0.0,0)node[below]{$0$}-- ++(0,0.8)node[above]{$C$};;;;;\draw[-](8.0,0)node[below]{$n$}\end{tikzpicture}\end{center}
+     #+end_latex
 
-    #+begin_src clojure :results value :wrap latex :exports results
+     #+begin_src clojure :results value :wrap latex :exports results
 (cashflow {0 [nil nil] 'n ['C nil]})
-    #+end_src
+     #+end_src
 
-    #+RESULTS:
-    #+begin_latex
-    \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);;;\draw[-](0.0,0)node[below]{$0$};\draw[->](8.0,0)node[below]{$n$}-- ++(0,0.8)node[above]{$C$};;\end{tikzpicture}\end{center}
-    #+end_latex
+     #+RESULTS:
+     #+begin_latex
+     \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);;;\draw[-](0.0,0)node[below]{$0$};\draw[->](8.0,0)node[below]{$n$}-- ++(0,0.8)node[above]{$C$};;\end{tikzpicture}\end{center}
+     #+end_latex
 
-    ... e algum fator de capitalização $f$ positivo, então pela definição anterior de *equivalência de capitais*, obviamente valem as desigualdades:
-    #+begin_src clojure :results value :wrap latex :exports results
+     ... e algum fator de capitalização $f$ positivo, então pela definição anterior de *equivalência de capitais*, obviamente valem as desigualdades:
+     #+begin_src clojure :results value :wrap latex :exports results
 (align
  (gt ((literal-function 'f) 'n) 0)
  (lt 'C (fv (literal-function 'f) 'n 'C))
  (gt 'C (pv (literal-function 'f) 'n 'C)))
-    #+end_src
+     #+end_src
+
+     #+RESULTS:
+     #+begin_latex
+     \begin{align*}f\left(n\right) &> 0\\C &< C\,f\left(n\right)\\C &> \frac{C}{f\left(n\right)}\end{align*}
+     #+end_latex
+
+     Ou seja, um capital de $ 1000 hoje vale mais do que $ 1000 no futuro devido ao seu potencial de rendimento a uma taxa apropriada. Da mesma forma, o adiantamento de um capital de $ 1000 que a princípio seria pago no futuro deve ser descontado a uma taxa apropriada.
+
+     Esse conceito fundamental recebe o nome *valor do capital no tempo*.
+
+*** Capitais equivalentes em sequência
+
+    Dada uma operação com o seguinte fluxo de caixa:
+    #+begin_src clojure :results value :wrap latex :exports results
+(cashflow {0 ['C_0 nil] 1 ['C_1 nil] 2 ['C_2 nil] 3 ['C_3 nil] '... [] 'n ['C_n nil]})
+    #+end_src   
 
     #+RESULTS:
     #+begin_latex
-    \begin{align*}f\left(n\right) &> 0\\C &< C\,f\left(n\right)\\C &> \frac{C}{f\left(n\right)}\end{align*}
+    \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);\draw[->](0.0,0)node[below]{$0$}-- ++(0,0.8)node[above]{$C_0$};;;\draw[->](1.6,0)node[below]{$1$}-- ++(0,0.8)node[above]{$C_1$};;;\draw[->](3.200000047683716,0)node[below]{$2$}-- ++(0,0.8)node[above]{$C_2$};;;\draw[->](4.800000071525574,0)node[below]{$3$}-- ++(0,0.8)node[above]{$C_3$};;;;;\draw[-](6.400000095367432,0)node[below]{$\ldots$};\draw[->](8.00000011920929,0)node[below]{$n$}-- ++(0,0.8)node[above]{$C_n$};;\end{tikzpicture}\end{center}
     #+end_latex
 
-    Ou seja, um capital de $ 1000 hoje vale mais do que $ 1000 no futuro devido ao seu potencial de rendimento a uma taxa apropriada. Da mesma forma, o adiantamento de um capital de $ 1000 que a princípio seria pago no futuro deve ser descontado a uma taxa apropriada.
-
-    Esse conceito fundamental recebe o nome *valor do capital no tempo*.
-
-** Capitais equivalentes em sequência
-
-   Dada uma operação com o seguinte fluxo de caixa:
-   #+begin_src clojure :results value :wrap latex :exports results
-(cashflow {0 ['C_0 nil] 1 ['C_1 nil] 2 ['C_2 nil] 3 ['C_3 nil] '... [] 'n ['C_n nil]})
-   #+end_src   
-
-   #+RESULTS:
-   #+begin_latex
-   \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);\draw[->](0.0,0)node[below]{$0$}-- ++(0,0.8)node[above]{$C_0$};;;\draw[->](1.6,0)node[below]{$1$}-- ++(0,0.8)node[above]{$C_1$};;;\draw[->](3.200000047683716,0)node[below]{$2$}-- ++(0,0.8)node[above]{$C_2$};;;\draw[->](4.800000071525574,0)node[below]{$3$}-- ++(0,0.8)node[above]{$C_3$};;;;;\draw[-](6.400000095367432,0)node[below]{$\ldots$};\draw[->](8.00000011920929,0)node[below]{$n$}-- ++(0,0.8)node[above]{$C_n$};;\end{tikzpicture}\end{center}
-   #+end_latex
-
-   Então, pela definição de equivalência de capitais, podemos generalizar as equações de valor presente $PV$ e valor futuro $FV$ para este fluxo de caixa através de:
-   #+begin_src clojure :results value :wrap latex :exports results
+    Então, pela definição de equivalência de capitais, podemos generalizar as equações de valor presente $PV$ e valor futuro $FV$ para este fluxo de caixa através de:
+    #+begin_src clojure :results value :wrap latex :exports results
 (align
  (eq 'PV
      (fn->series #(pv (literal-function 'f) % (nth ['C_0 'C_1 'C_2 'C_3] %)))
@@ -682,122 +728,168 @@
  (eq 'FV
      (fn->series #(fv (literal-function 'f) % (nth ['C_0 'C_1 'C_2 'C_3] %)))
      ((literal-function (symbol "\\sum_{x\\doteq0}^{n}")) (fv (literal-function 'f) 'x 'C_x))))
-   #+end_src      
+    #+end_src      
 
-   #+RESULTS:
-   #+begin_latex
-   \begin{align*}{PV} &= \left(\frac{C_0}{f\left(0\right)}\right) + \left(\frac{C_1}{f\left(1\right)}\right) + \left(\frac{C_2}{f\left(2\right)}\right) + \left(\frac{C_3}{f\left(3\right)}\right) + \ldots \\&= {\sum_{x\doteq0}^{n}}\left(\frac{C_x}{f\left(x\right)}\right)\\{FV} &= C_0\,f\left(0\right) + C_1\,f\left(1\right) + C_2\,f\left(2\right) + C_3\,f\left(3\right) + \ldots \\&= {\sum_{x\doteq0}^{n}}\left(C_x\,f\left(x\right)\right)\end{align*}
-   #+end_latex
+    #+RESULTS:
+    #+begin_latex
+    \begin{align*}{PV} &= \left(\frac{C_0}{f\left(0\right)}\right) + \left(\frac{C_1}{f\left(1\right)}\right) + \left(\frac{C_2}{f\left(2\right)}\right) + \left(\frac{C_3}{f\left(3\right)}\right) + \ldots \\&= {\sum_{x\doteq0}^{n}}\left(\frac{C_x}{f\left(x\right)}\right)\\{FV} &= C_0\,f\left(0\right) + C_1\,f\left(1\right) + C_2\,f\left(2\right) + C_3\,f\left(3\right) + \ldots \\&= {\sum_{x\doteq0}^{n}}\left(C_x\,f\left(x\right)\right)\end{align*}
+    #+end_latex
 
-   *Exemplo:*
+    *Exemplo:*
 
-   Uma operação prevê o pagamento de $ 2000, $ 3000 e $ 5000 em três meses consecutivos:
+    Uma operação prevê o pagamento de $ 2000, $ 3000 e $ 5000 em três meses consecutivos:
 
-   #+begin_src clojure :results value :wrap latex :exports results
+    #+begin_src clojure :results value :wrap latex :exports results
 (cashflow {0 [] 1 [nil 2000] 2 [nil 3000] 3 [nil 5000]})
-   #+end_src   
+    #+end_src   
 
-   #+RESULTS:
-   #+begin_latex
-   \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);;;\draw[-](0.0,0)node[below]{$0$};;\draw[->](2.6666667,0)node[above]{$1$}-- ++(0,-0.8)node[below]{$2000$};;;\draw[->](5.333333492279053,0)node[above]{$2$}-- ++(0,-0.8)node[below]{$3000$};;;\draw[->](8.000000238418579,0)node[above]{$3$}-- ++(0,-0.8)node[below]{$5000$};\end{tikzpicture}\end{center}
-   #+end_latex
+    #+RESULTS:
+    #+begin_latex
+    \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);;;\draw[-](0.0,0)node[below]{$0$};;\draw[->](2.6666667,0)node[above]{$1$}-- ++(0,-0.8)node[below]{$2000$};;;\draw[->](5.333333492279053,0)node[above]{$2$}-- ++(0,-0.8)node[below]{$3000$};;;\draw[->](8.000000238418579,0)node[above]{$3$}-- ++(0,-0.8)node[below]{$5000$};\end{tikzpicture}\end{center}
+    #+end_latex
 
-   Qual o menor capital que, aplicado a uma taxa de 1.5% ao mês, faz frente a estes pagamentos?
-   #+begin_src clojure
+    Qual o menor capital que, aplicado a uma taxa de 1.5% ao mês, faz frente a estes pagamentos?
+    #+begin_src clojure
 (let [f (compound 0.015M)
       cf [2000 3000 5000]]
   (reduce + (map-indexed #(pv f (+ %1 1) %2) cf)))
-   #+end_src
+    #+end_src
 
-   #+RESULTS:
-   : 9664.0M
+    #+RESULTS:
+    : 9664.0M
   
-   Prova:
+    Prova:
 
-   - No primeiro mês de aplicação, obtemos o montante:
-     #+begin_src clojure
+    - No primeiro mês de aplicação, obtemos o montante:
+      #+begin_src clojure
 (fv (compound 0.015M) 1 9664M)
-     #+end_src
+      #+end_src
 
-     #+RESULTS:
-     : 9809.0M
+      #+RESULTS:
+      : 9809.0M
 
-   - Se retiramos $ 2000 e aplicamos o restante por mais um mês, obtemos:
-     #+begin_src clojure
+    - Se retiramos $ 2000 e aplicamos o restante por mais um mês, obtemos:
+      #+begin_src clojure
 (fv (compound 0.015M) 1 (+ 9809M -2000M))
-     #+end_src   
+      #+end_src   
 
-     #+RESULTS:
-     : 7926.1M
+      #+RESULTS:
+      : 7926.1M
      
-   - Se retiramos mais $ 3000 e aplicamos o restante por mais um mês, obtemos:
-     #+begin_src clojure
+    - Se retiramos mais $ 3000 e aplicamos o restante por mais um mês, obtemos:
+      #+begin_src clojure
 (fv (compound 0.015M) 1 (+ 7926.1M -3000M))
-     #+end_src   
+      #+end_src   
 
-     #+RESULTS:
-     : 5000.0M
+      #+RESULTS:
+      : 5000.0M
 
-   Obtendo então o seguinte fluxo de caixa da aplicação:
-   #+begin_src clojure :results value :wrap latex :exports results
+    Obtendo então o seguinte fluxo de caixa da aplicação:
+    #+begin_src clojure :results value :wrap latex :exports results
 (cashflow {0 [nil 9664] 1 [2000 nil] 2 [3000 nil] 3 [5000 nil]})
-   #+end_src   
+    #+end_src   
 
-   #+RESULTS:
-   #+begin_latex
-   \begin{center}
-   \begin{tikzpicture}
-   \draw[-](0,0) -- (8,0);
-   \draw[->](0.0,0)node[above]{$0$} -- ++(0,-0.8)node[below]{$9664$};
-   \draw[->](2.6666667,0)node[below]{$1$} -- ++(0,0.8)node[above]{$2000$};
-   \draw[->](5.333333492279053,0)node[below]{$2$} -- ++(0,0.8)node[above]{$3000$};
-   \draw[->](8.000000238418579,0)node[below]{$3$} -- ++(0,0.8)node[above]{$5000$}
-   \end{tikzpicture}
-   \end{center}
-   #+end_latex
+    #+RESULTS:
+    #+begin_latex
+    \begin{center}
+    \begin{tikzpicture}
+    \draw[-](0,0) -- (8,0);
+    \draw[->](0.0,0)node[above]{$0$} -- ++(0,-0.8)node[below]{$9664$};
+    \draw[->](2.6666667,0)node[below]{$1$} -- ++(0,0.8)node[above]{$2000$};
+    \draw[->](5.333333492279053,0)node[below]{$2$} -- ++(0,0.8)node[above]{$3000$};
+    \draw[->](8.000000238418579,0)node[below]{$3$} -- ++(0,0.8)node[above]{$5000$}
+    \end{tikzpicture}
+    \end{center}
+    #+end_latex
 
-   Que se somado ao fluxo de caixa dos pagamentos:
-   #+begin_src clojure :results value :wrap latex :exports results
+    Que se somado ao fluxo de caixa dos pagamentos:
+    #+begin_src clojure :results value :wrap latex :exports results
 (cashflow {0 [] 1 [nil 2000] 2 [nil 3000] 3 [nil 5000]})
-   #+end_src   
+    #+end_src   
 
-   #+RESULTS:
-   #+begin_latex
-   \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);;;\draw[-](0.0,0)node[below]{$0$};;\draw[->](2.6666667,0)node[above]{$1$}-- ++(0,-0.8)node[below]{$2000$};;;\draw[->](5.333333492279053,0)node[above]{$2$}-- ++(0,-0.8)node[below]{$3000$};;;\draw[->](8.000000238418579,0)node[above]{$3$}-- ++(0,-0.8)node[below]{$5000$};\end{tikzpicture}\end{center}
-   #+end_latex
+    #+RESULTS:
+    #+begin_latex
+    \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);;;\draw[-](0.0,0)node[below]{$0$};;\draw[->](2.6666667,0)node[above]{$1$}-- ++(0,-0.8)node[below]{$2000$};;;\draw[->](5.333333492279053,0)node[above]{$2$}-- ++(0,-0.8)node[below]{$3000$};;;\draw[->](8.000000238418579,0)node[above]{$3$}-- ++(0,-0.8)node[below]{$5000$};\end{tikzpicture}\end{center}
+    #+end_latex
 
-   Equivale ao fluxo de caixa líquido:
-   #+begin_src clojure :results value :wrap latex :exports results
+    Equivale ao fluxo de caixa líquido:
+    #+begin_src clojure :results value :wrap latex :exports results
 (cashflow {0 [nil 9664] 1 [0] 2 [0] 3 [0]})
-   #+end_src   
+    #+end_src   
 
-   #+RESULTS:
-   #+begin_latex
-   \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);;\draw[->](0.0,0)node[above]{$0$}-- ++(0,-0.8)node[below]{$9664$};;\draw[->](2.6666667,0)node[below]{$1$}-- ++(0,0.8)node[above]{$0$};;;\draw[->](5.333333492279053,0)node[below]{$2$}-- ++(0,0.8)node[above]{$0$};;;\draw[->](8.000000238418579,0)node[below]{$3$}-- ++(0,0.8)node[above]{$0$};;\end{tikzpicture}\end{center}
-   #+end_latex
+    #+RESULTS:
+    #+begin_latex
+    \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);;\draw[->](0.0,0)node[above]{$0$}-- ++(0,-0.8)node[below]{$9664$};;\draw[->](2.6666667,0)node[below]{$1$}-- ++(0,0.8)node[above]{$0$};;;\draw[->](5.333333492279053,0)node[below]{$2$}-- ++(0,0.8)node[above]{$0$};;;\draw[->](8.000000238418579,0)node[below]{$3$}-- ++(0,0.8)node[above]{$0$};;\end{tikzpicture}\end{center}
+    #+end_latex
    
-** Valor presente líquido
+*** Valor presente líquido
 
-   Dada uma operação com o seguinte fluxo de caixa...
-   #+begin_src clojure :results value :wrap latex :exports results
+    Dada uma operação com o seguinte fluxo de caixa:
+    #+begin_src clojure :results value :wrap latex :exports results
 (cashflow {0 [nil 'C_0] 'n ['C_n nil]})
-  #+end_src
-
-  #+RESULTS:
-  #+begin_latex
-  \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);;\draw[->](0.0,0)node[above]{$0$}-- ++(0,-0.8)node[below]{$C_0$};;\draw[->](8.0,0)node[below]{$n$}-- ++(0,0.8)node[above]{$C_n$};;\end{tikzpicture}\end{center}
-  #+end_latex
-
-   ... podemos analisar a rentabilidade (ou valor presente líquido) ${NPV}$ dessa operação calculando:
-   #+begin_src clojure :results value :wrap latex :exports results
-(align
- (eq 'NPV (- (pv (literal-function 'f) 'n 'C) 'C_0)))
    #+end_src
 
    #+RESULTS:
    #+begin_latex
-   \begin{align*}{NPV} &= \left(\frac{C}{f\left(n\right)}\right) - C_0\end{align*}
+   \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);;\draw[->](0.0,0)node[above]{$0$}-- ++(0,-0.8)node[below]{$C_0$};;\draw[->](8.0,0)node[below]{$n$}-- ++(0,0.8)node[above]{$C_n$};;\end{tikzpicture}\end{center}
    #+end_latex
 
-   - Se ${NPV} > 0$, a operação é rentável;
-   - Se $NPV \leq 0$, a operação não é rentável, e permanecer com o capital $C_0$ é mais vantajoso;
+    Podemos analisar a rentabilidade (ou valor presente líquido) ${NPV}$ dessa operação calculando:
+    #+begin_src clojure :results value :wrap latex :exports results
+(align
+ (eq 'NPV (- (pv (literal-function 'f) 'n 'C_n) 'C_0)))
+    #+end_src
+
+    #+RESULTS:
+    #+begin_latex
+    \begin{align*}{NPV} &= \left(\frac{C_n}{f\left(n\right)}\right) - C_0\end{align*}
+    #+end_latex
+
+    - Se ${NPV} > 0$, a operação é rentável;
+    - Se $NPV \leq 0$, a operação não é rentável;
+
+** Calendários de amortização
+
+*** Sistema de Amortização Constante
+
+    #+begin_src clojure :results value :wrap latex
+(eq 'I (:interest (straight 'i 'n 'PV)))
+    #+end_src
+
+    #+RESULTS:
+    #+begin_latex
+    $I = 0 + {PV}\,i + \left(\frac{{PV}\,i\,n - {PV}\,i}{n}\right) + \left(\frac{{PV}\,i\,n -2\,{PV}\,i}{n}\right) + \ldots$
+    #+end_latex
+
+    #+begin_src clojure :results value :wrap latex
+(eq 'FV (:balance (straight 'i 'n 'PV)))
+    #+end_src    
+
+    #+RESULTS:
+    #+begin_latex
+    ${FV} = {PV} + \left(\frac{{PV}\,n - {PV}}{n}\right) + \left(\frac{{PV}\,n -2\,{PV}}{n}\right) + \left(\frac{{PV}\,n -3\,{PV}}{n}\right) + \ldots$
+    #+end_latex
+    
+    #+begin_src clojure
+(as-table (straight 0.1M 3 1000))
+    #+end_src
+
+    #+RESULTS:
+    | :payments | :amortizations | :interest | :balance |
+    | 1000      | 0              | 0         | 1000     |
+    | -433.33M  | -333.33M       | 100.00M   | 666.67M  |
+    | -400.00M  | -333.33M       | 66.67M    | 333.34M  |
+    | -366.67M  | -333.33M       | 33.34M    | 0.01M    |
+
+*** Sistema Price ou Francês
+
+    #+begin_src clojure
+(as-table (price 0.1M 3 1000))
+    #+end_src
+
+    #+RESULTS:
+    | :payments | :amortizations | :interest | :balance |
+    | 1000      | 0              | 0         | 1000     |
+    | -402.11M  | -302.11M       | 100.00M   | 697.89M  |
+    | -402.11M  | -332.32M       | 69.79M    | 365.57M  |
+    | -402.11M  | -365.55M       | 36.56M    | 0.02M    |

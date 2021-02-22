@@ -207,7 +207,7 @@
 
 (comment
   (->infix (fn->series #(pv (compound 'i) % (nth [(- 'C_0) 'C_1 'C_2 'C_3 'C_4] %)))))
-            
+
 ;;;; Amortization methods
 
 ;; Derivation of formula for Price (aka French or Loan-style) amortization method
@@ -240,10 +240,14 @@
          p'  (- (pmt i' n))
          cf  (* pv (x->series p'))
          icf (* cf (i->series i'))]
-     {:payments      cf
-      :amortizations (- icf (s/series pv))
-      :interest      (- icf cf)
-      :balance       (s/partial-sums icf)})))
+     (with-meta
+       {:payments      cf
+        :amortizations (- icf (s/series pv))
+        :interest      (- icf cf)
+        :balance       (s/partial-sums icf)}
+       {:i i
+        :n n
+        :pv pv}))))
 
 (comment
   (price 0.1 3 1000))
@@ -270,13 +274,23 @@
          p'  (- (pmt i' n))
          cf  (* pv (x->series p'))
          icf (* cf (i->series i'))]
-     {:payments      (- cf (- icf cf))
-      :amortizations (- cf (s/series pv))
-      :interest      (- icf cf)
-      :balance       (s/partial-sums cf)})))
+     (with-meta
+       {:payments      (- cf (- icf cf))
+        :amortizations (- cf (s/series pv))
+        :interest      (- icf cf)
+        :balance       (s/partial-sums cf)}
+       {:i i
+        :n n
+        :pv pv}))))
 
 (comment
   (straight 0.1 3 1000))
+
+(defn as-table [t]
+  (let [{:keys [n]} (meta t)]
+    (apply mapv vector
+           (map (fn [[k v]]
+                  (into [k] (take (inc n) v))) t))))
 
 ;;;; Ledger
 
