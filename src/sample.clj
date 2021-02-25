@@ -9,7 +9,8 @@
 ;;;; Helpers
 
 (defn render* [v]
-  (binding [*TeX-sans-serif-symbols* false]
+  (binding [*TeX-sans-serif-symbols* false
+            *TeX-vertical-down-tuples* false]
     (->TeX v)))
 
 (defn render [v]
@@ -168,7 +169,6 @@
 (def m->dActual (/ 12 (/ (+ (* 303 365) (* 97 366)) 400))) ; In every 400-year period, there are 303 regular years and 97 leap years in the Gregorian calendar.
 
 (comment
-  ((compound 'i) (* 'n m->d252))
   ((compound 0.1) (* 21 m->d252))
 
   ((compound 0.1) (* 30 m->d360))
@@ -286,11 +286,24 @@
 (comment
   (straight 0.1 3 1000))
 
-(defn as-table [t]
-  (let [{:keys [n]} (meta t)]
-    (apply mapv vector
-           (map (fn [[k v]]
-                  (into [k] (take (inc n) v))) t))))
+(defn as-table [t headers]
+  (let [{:keys [n]} (meta t)
+        pivoted (->> t
+                     (map (fn [[k v]]
+                            (into [(get headers k)] (take (inc n) v))))
+                     (apply mapv vector))]
+    (into [(first pivoted) nil] (rest pivoted))))
+
+(comment
+  (as-table (with-meta {:foo [1 2 3]} {:n 3}) {:foo ""}))
+
+(defn table->cashflow [t]
+  (let [p (take (inc (:n (meta t))) (:payments t))]
+    (cashflow
+     (into {}
+           (map-indexed
+            (fn [k v]
+              (if (pos? v) {k [v nil]} {k [nil v]})) p)))))
 
 ;;;; Ledger
 
@@ -316,19 +329,3 @@
    (->> (balance-sheet [:pnl/revenue :asset/loan] (:interest t)
                        [:asset/cash :asset/loan] (:payments t))
         (run-sheet 4))))
-
-(map *
-     [0.10 0.10 0.10]
-     [0.25 0.20 0.175])
-
-(* ((compound-index [(- (expt 1.18 30/360) 1)])
-    1) 15000)
-
-
-(* ((* (compound-index [0.013888430348409920])
-     (compound-index [-0.225])) 1) 15000)
-
-((* (compound-index ['i])
-    (compound-index ['t])) 1)
-
-(interest (compound (* 0.013888430348409920 (- 1 0.225))) 1 15000)

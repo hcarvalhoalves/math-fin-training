@@ -19,13 +19,21 @@ h2,h3 {
     border-bottom: 1px solid #000;
 }
 
+table {
+    margin: 0 auto;
+}
+
 #content {
     margin: 5em auto;
-    width: 46em;
+    width: 50em;
 }
 
 .org-svg {
     width: auto;
     display: inline-block;
     vertical-align: -.125em;
+}
+
+.equation-container {
+    margin: 2.5em 0;
 }

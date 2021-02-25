@@ -1,0 +1,1823 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt_BR" xml:lang="pt_BR">
+<head>
+<!-- 2021-02-25 Thu 16:44 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Fundamentos de Matemática Financeira (WIP)</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Henrique Carvalho Alves" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="org.css"/>
+<script type="text/javascript">
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
+<!--/*--><![CDATA[/*><!--*/
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Fundamentos de Matemática Financeira (WIP)
+<br />
+<span class="subtitle">Uma abordagem interativa em Clojure</span>
+</h1>
+<div id="table-of-contents">
+<h2>&Iacute;ndice</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgd0b01ec">1. Introdução</a></li>
+<li><a href="#org05709b1">2. Juros</a>
+<ul>
+<li><a href="#org332318a">2.1. Fundamentos</a></li>
+<li><a href="#org1eedb05">2.2. Juros simples</a></li>
+<li><a href="#orgcc7bd8f">2.3. Juros compostos</a></li>
+<li><a href="#org07b065a">2.4. Fator de capitalização</a>
+<ul>
+<li><a href="#orgefc0c78">2.4.1. Frequência de capitalização</a></li>
+<li><a href="#org156e3bb">2.4.2. Taxa efetiva</a></li>
+<li><a href="#org59079e4">2.4.3. Taxa equivalente</a></li>
+</ul>
+</li>
+<li><a href="#org2072265">2.5. Taxas variáveis</a></li>
+<li><a href="#org13ce863">2.6. Taxas corrigidas</a></li>
+</ul>
+</li>
+<li><a href="#orge2c16e7">3. Capitais</a>
+<ul>
+<li><a href="#orga3982a4">3.1. Fluxo de caixa</a>
+<ul>
+<li><a href="#orgc283ac7">3.1.1. Capitais equivalentes</a></li>
+<li><a href="#org6aefe75">3.1.2. Capitais equivalentes em sequência</a></li>
+<li><a href="#org0d970a7">3.1.3. Valor presente líquido</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org0fb5639">4. Sistemas de Amortização</a>
+<ul>
+<li><a href="#org8ea55b2">4.1. Sistema de Amortização Constante</a></li>
+<li><a href="#orgf7a8547">4.2. Sistema Price ou Francês</a></li>
+</ul>
+</li>
+<li><a href="#orgd6cb237">5. Referências</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgd0b01ec" class="outline-2">
+<h2 id="orgd0b01ec"><span class="section-number-2">1</span> Introdução</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+O objetivo do livro é construir uma intuição de como derivar fórmulas para cálculos de juros, fluxos de caixa e sistemas de amortização a partir de relações básicas, ao mesmo tempo em que demonstra como implementar em uma linguagem de programação.
+</p>
+
+<p>
+Este livro acompanha código-fonte na linguagem <code>clojure</code>, que serve de suporte para as demonstrações e implementa as funções básicas de matemática financeira.
+Todas as fórmulas incluídas no livro são geradas a partir da definição canônica destas funções, e renderizadas em LaTeX utilizando a biblioteca <code>sicmutils</code>. O código-fonte do próprio livro está disponível em formato <code>org-mode</code> para <code>emacs</code>, e pode ser explorado de forma interativa seguindo as instruções de instalação.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org05709b1" class="outline-2">
+<h2 id="org05709b1"><span class="section-number-2">2</span> Juros</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org332318a" class="outline-3">
+<h3 id="org332318a"><span class="section-number-3">2.1</span> Fundamentos</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Dado o capital (ou valor presente) <object type="image/svg+xml" data="ltximg/examples_574f05544b438681dc299dc0cfb22657854a8773.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>, a taxa de juros (%) <object type="image/svg+xml" data="ltximg/examples_802f985f8a255b1976f3886fa2d0c180979dd84c.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>, o juro <object type="image/svg+xml" data="ltximg/examples_2c22f477e59e4c40702072a716a680f53b0e0a50.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> e o montante (ou valor futuro) <object type="image/svg+xml" data="ltximg/examples_c716c239a039bc65c8ac32042be883c3f3e783f3.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>, as relações fundamentais são:
+</p>
+<div class="latex" id="org3961873">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_e646b48245a9b6f98e05918fa86e9c31560fff26.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<p>
+<b>Exemplo:</b>
+</p>
+
+<p>
+Um capital de $ 1000 aplicado durante um ano a uma taxa de 22% ao ano.
+</p>
+
+<ol class="org-ol">
+<li><p>
+O juro é dado por:
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(* 1000 0.22M)
+</pre>
+</div>
+
+<pre class="example">
+220.00M
+</pre></li>
+
+<li><p>
+O montante ao fim do período é dado por:
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(* 1000 1.22M)
+</pre>
+</div>
+
+<pre class="example">
+1220.0M
+</pre></li>
+
+<li><p>
+O capital que deve aplicar-se para obter $ 1220 à mesma taxa é:
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(/ 1220 1.22M)
+</pre>
+</div>
+
+<pre class="example">
+1.0E+3M
+</pre></li>
+
+<li><p>
+E a taxa de juros pode ser inferida por:
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(- (/ 1220 1000) 1M)
+</pre>
+</div>
+
+<pre class="example">
+0.22M
+</pre></li>
+</ol>
+
+<p>
+Neste exemplo, o período da taxa <object type="image/svg+xml" data="ltximg/examples_802f985f8a255b1976f3886fa2d0c180979dd84c.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> e o período de aplicação foi o mesmo.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1eedb05" class="outline-3">
+<h3 id="org1eedb05"><span class="section-number-3">2.2</span> Juros simples</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+É o regime de capitalização em que aplica-se a taxa <object type="image/svg+xml" data="ltximg/examples_802f985f8a255b1976f3886fa2d0c180979dd84c.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> a um mesmo capital <object type="image/svg+xml" data="ltximg/examples_58563c6c58b6cb61ed90fd8bb0ff5d4fdbc6a67b.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>, por <object type="image/svg+xml" data="ltximg/examples_58199a5456c6af107f6ae48293c635a1c794b09c.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> períodos, para obter o montante <object type="image/svg+xml" data="ltximg/examples_c716c239a039bc65c8ac32042be883c3f3e783f3.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>:
+</p>
+<div class="latex" id="org44c67e8">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_370a03da9ce3c17201432a9531e461f03f56b4a6.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<p>
+Por analogia, faz-se a operação inversa para descontar a taxa <object type="image/svg+xml" data="ltximg/examples_802f985f8a255b1976f3886fa2d0c180979dd84c.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> do montante <object type="image/svg+xml" data="ltximg/examples_c716c239a039bc65c8ac32042be883c3f3e783f3.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> e obter o capital <object type="image/svg+xml" data="ltximg/examples_58563c6c58b6cb61ed90fd8bb0ff5d4fdbc6a67b.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>:
+</p>
+<div class="latex" id="org43e3ae4">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_5914e7b0a4ecce0e2af135b4aad5e26926bde31d.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<p>
+Portanto, o <b>fator de capitalização</b> para juros simples é a função linear:
+</p>
+<div class="latex" id="org199fdec">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_4e4f8c95ffc5ae683a2c4e9ddd698b185015ebbb.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<p>
+<b>Exemplo:</b>
+</p>
+
+<p>
+Um capital de $ 1000 aplicado a uma taxa de 8% ao mês segue a progressão:
+</p>
+<div class="latex" id="orge7af84c">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_93448569e97b3ea49df7b620f8e5b2a567d7cb35.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<p>
+Portanto, o montante ao fim de 3 meses equivale a:
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(* 1000 ((simple 0.08M) 3))
+</pre>
+</div>
+
+<pre class="example">
+1240.0M
+</pre>
+
+
+<p>
+E o capital que equivale a este montante (ou ainda, o valor futuro trazido a valor presente) na mesma taxa é:
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(/ 1240 ((simple 0.08M) 3))
+</pre>
+</div>
+
+<pre class="example">
+1.0E+3M
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgcc7bd8f" class="outline-3">
+<h3 id="orgcc7bd8f"><span class="section-number-3">2.3</span> Juros compostos</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+É o regime de capitalização em que aplica-se a taxa <object type="image/svg+xml" data="ltximg/examples_802f985f8a255b1976f3886fa2d0c180979dd84c.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> sobre o capital <object type="image/svg+xml" data="ltximg/examples_58563c6c58b6cb61ed90fd8bb0ff5d4fdbc6a67b.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> para obter o primeiro montante, e a mesma taxa <object type="image/svg+xml" data="ltximg/examples_802f985f8a255b1976f3886fa2d0c180979dd84c.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> sobre <i>este</i> montante, e assim por diante, um <object type="image/svg+xml" data="ltximg/examples_58199a5456c6af107f6ae48293c635a1c794b09c.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> número de vezes, até obter o montante final <object type="image/svg+xml" data="ltximg/examples_c716c239a039bc65c8ac32042be883c3f3e783f3.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>:
+</p>
+<div class="latex" id="org3d3b6fe">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_dca28246483c068367e21a4898fe2cceb807512c.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<p>
+Por analogia, faz-se a operação inversa para descontar a taxa <object type="image/svg+xml" data="ltximg/examples_802f985f8a255b1976f3886fa2d0c180979dd84c.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> do montante <object type="image/svg+xml" data="ltximg/examples_c716c239a039bc65c8ac32042be883c3f3e783f3.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> e obter o capital <object type="image/svg+xml" data="ltximg/examples_58563c6c58b6cb61ed90fd8bb0ff5d4fdbc6a67b.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>:
+</p>
+<div class="latex" id="org3dd7173">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_d2e2ff6a3dee1f0a1eb89c34fb78e63733d4fadf.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<p>
+Portanto, diferente dos juros simples, o <b>fator de capitalização</b> para juros compostos é a função <i>não-linear</i>:
+</p>
+<div class="latex" id="org5b7d9ba">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_279bf22487e5c1e2e491fa57e013f1296a908e28.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<p>
+<b>Exemplo:</b>
+</p>
+
+<p>
+Um capital de $ 1000 aplicado a uma taxa de 8% ao mês segue a progressão:
+</p>
+<div class="latex" id="orgc63bf82">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_b2e41edd57db653dca434232683a97ed5f7c1fd0.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<p>
+Portanto, o montante ao fim de 3 meses equivale a:
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(* 1000 ((compound 0.08M) 3))
+</pre>
+</div>
+
+<pre class="example">
+1259.7M
+</pre>
+
+
+<p>
+E o capital que equivale a este montante (ou ainda, o valor futuro trazido a valor presente) na mesma taxa é:
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(/ 1259.7M ((compound 0.08M) 3))
+</pre>
+</div>
+
+<pre class="example">
+1E+3M
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org07b065a" class="outline-3">
+<h3 id="org07b065a"><span class="section-number-3">2.4</span> Fator de capitalização</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+Para aplicações que duram <object type="image/svg+xml" data="ltximg/examples_58199a5456c6af107f6ae48293c635a1c794b09c.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> períodos, podemos generalizar as equações para um <b>fator de capitalização</b> qualquer <object type="image/svg+xml" data="ltximg/examples_333fa488c64384d9ac35cace70d4900aed91375e.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> em função de <object type="image/svg+xml" data="ltximg/examples_58199a5456c6af107f6ae48293c635a1c794b09c.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>, obtendo:
+</p>
+<div class="latex" id="orga5a3cb3">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_b8593d94b49b3ba994836f6893d8752f28845ee2.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<p>
+<b>Exemplo:</b>
+</p>
+
+<p>
+Uma capital de $ 1000 é aplicado a uma taxa progressiva de 2%, 4%, 6%, 8%, &#x2026; ao ano, conforme o tempo em que permanece aplicado.
+</p>
+
+<p>
+Qual será o montante para cada ano aplicado, durante os 5 primeiros anos?
+</p>
+
+<p>
+O fator de capitalização para essa taxa progressiva é dado por:
+</p>
+<div class="latex" id="orge8faf36">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_fad0de2caf957732e7e2ff9a3e59cc29448e16dd.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<p>
+Portanto:
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(let [f (fn [n] (+ 1 (* 0.02M (expt n 2))))]
+  (mapv #(fv f % 1000) (range 1 6)))
+</pre>
+</div>
+
+<pre class="example">
+[1020.0M 1080.0M 1180.0M 1320.0M 1500.0M]
+</pre>
+</div>
+
+<div id="outline-container-orgefc0c78" class="outline-4">
+<h4 id="orgefc0c78"><span class="section-number-4">2.4.1</span> Frequência de capitalização</h4>
+<div class="outline-text-4" id="text-2-4-1">
+<p>
+Quando a aplicação dura <object type="image/svg+xml" data="ltximg/examples_58199a5456c6af107f6ae48293c635a1c794b09c.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> períodos, a <b>frequência de capitalização</b> dita quantas vezes o montante será reaplicado durante o prazo.
+</p>
+
+<p>
+<b>Exemplo</b>:
+</p>
+
+<p>
+Assumindo uma taxa <object type="image/svg+xml" data="ltximg/examples_802f985f8a255b1976f3886fa2d0c180979dd84c.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> de 1% ao ano, analisamos o fator de capitalização com aplicações anuais, mensais e diárias.
+</p>
+
+<ol class="org-ol">
+<li><p>
+No caso do regime de juros simples, não há diferença entre frequências de capitalização diferentes.
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">((simple 1) 1.0)
+((simple (/ 1 12)) 12.0)
+((simple (/ 1 360)) 360.0)
+((simple (/ 1 365)) 365.0)
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">2.0</td>
+</tr>
+
+<tr>
+<td class="org-right">2.0</td>
+</tr>
+
+<tr>
+<td class="org-right">2.0</td>
+</tr>
+
+<tr>
+<td class="org-right">2.0</td>
+</tr>
+</tbody>
+</table></li>
+
+<li><p>
+No caso do regime de juros compostos, uma maior frequência de capitalização representa um rendimento maior:
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">((compound 1) 1)
+((compound (/ 1 12)) 12.0)
+((compound (/ 1 360)) 360.0)
+((compound (/ 1 365)) 365.0)
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-right">2.6130352902246696</td>
+</tr>
+
+<tr>
+<td class="org-right">2.7145160248748965</td>
+</tr>
+
+<tr>
+<td class="org-right">2.714567482021534</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+É possível observar que conforme aumenta a frequência de capitalização, aproximamos a função exponencial:
+</p>
+<div class="latex" id="orgca03472">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_0eab9339f4bbb7b0e367dbe866119b4cdeba3f57.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<div class="org-src-container">
+<pre class="src src-clojure">((compound (/ 1 365)) 365.0)
+(exp 1)
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">2.714567482021534</td>
+</tr>
+
+<tr>
+<td class="org-right">2.718281828459045</td>
+</tr>
+</tbody>
+</table></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org156e3bb" class="outline-4">
+<h4 id="org156e3bb"><span class="section-number-4">2.4.2</span> Taxa efetiva</h4>
+<div class="outline-text-4" id="text-2-4-2">
+<p>
+Quando generalizamos o <b>fator de capitalização</b>, a fórmula para inferir a taxa <object type="image/svg+xml" data="ltximg/examples_802f985f8a255b1976f3886fa2d0c180979dd84c.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> (apresentada anteriormente), agora nos dá a chamada <b>taxa efetiva</b>:
+</p>
+<div class="latex" id="org7b6d194">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_4f117d0578b6a326ffe0678b10fd942160d74c90.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<p>
+<b>Exemplo:</b>
+</p>
+
+<p>
+Um capital de $ 1000 foi aplicado durante 12 meses a uma taxa nominal de 12% ao ano a juros compostos.
+</p>
+
+<p>
+Qual foi a taxa efetiva neste ano?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">(rate ((compound (/ 0.12M 12)) 12))
+</pre>
+</div>
+
+<pre class="example">
+0.1268M
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org59079e4" class="outline-4">
+<h4 id="org59079e4"><span class="section-number-4">2.4.3</span> Taxa equivalente</h4>
+<div class="outline-text-4" id="text-2-4-3">
+<p>
+São equivalentes as taxas nominais <object type="image/svg+xml" data="ltximg/examples_48b58e866964d6506eefadd236e8f54397690512.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> e <object type="image/svg+xml" data="ltximg/examples_b90e26a6120756d3efbfe20a20d6d60f471f61e1.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> quando, aplicadas nos períodos <object type="image/svg+xml" data="ltximg/examples_a5b00204bc1ca72e522c06cfea767558fbc5043d.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> e <object type="image/svg+xml" data="ltximg/examples_2ec00658e2795776e132efb9284a91d79edd3b67.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> relativos a duração das respectivas taxas, resultam no mesmo valor:
+</p>
+<div class="latex" id="orgb23da79">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_48599bdc861fdab3b3b8232fedb936d628752d76.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<p>
+<b>Exemplo:</b>
+</p>
+
+<p>
+Qual a taxa mensal equivalente a 21% ao ano:
+</p>
+
+<ol class="org-ol">
+<li><p>
+A juros simples?
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(* 0.21M 1/12)
+</pre>
+</div>
+
+<pre class="example">
+0.017500M
+</pre>
+
+
+<p>
+Prova:
+</p>
+<div class="latex" id="org6f08ba6">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_834fd62cddeb31fdb760dbcad50fefb8405f1cd1.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<div class="org-src-container">
+<pre class="src src-clojure">(rate ((simple 0.017500M) 12))
+</pre>
+</div>
+
+<pre class="example">
+0.2100M
+</pre></li>
+
+<li><p>
+A juros compostos?
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(- (expt (+ 1 0.21M) 1/12) 1)
+</pre>
+</div>
+
+<pre class="example">
+0.016011867773387367
+</pre>
+
+
+<p>
+Prova:
+</p>
+<div class="latex" id="orgf86b9ca">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_a64ba5a5f460c171637490349bc6cc2f26230800.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<div class="org-src-container">
+<pre class="src src-clojure">(rate ((compound 0.01602M) 12))
+</pre>
+</div>
+
+<pre class="example">
+0.2100M
+</pre></li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2072265" class="outline-3">
+<h3 id="org2072265"><span class="section-number-3">2.5</span> Taxas variáveis</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+Quando a taxa de juros varia ao longo do tempo, podemos generalizar o <b>fator de capitalização</b> para um vetor de taxas <object type="image/svg+xml" data="ltximg/examples_802f985f8a255b1976f3886fa2d0c180979dd84c.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> indexado pelo período <object type="image/svg+xml" data="ltximg/examples_58199a5456c6af107f6ae48293c635a1c794b09c.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>:
+</p>
+<div class="latex" id="org028830b">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_81dd8383d3678c3535bacf64d1315252729ae63a.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<p>
+Substituindo <object type="image/svg+xml" data="ltximg/examples_333fa488c64384d9ac35cace70d4900aed91375e.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> nas relações fundamentais, temos:
+</p>
+<div class="latex" id="org627e2a5">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_adfe5f17a0f96c8618b1d742c57dbec25289be18.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<p>
+<b>Exemplo:</b>
+</p>
+
+<p>
+Em três meses consecutivos, uma aplicação de $ 16000 rendeu 1.3%, 1.7% e 2.1%.
+</p>
+
+<p>
+Dada a função <code>compound-index</code> que retorna o produto das taxas:
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">((compound-index ['i_1 'i_2 'i_3]) 'n)
+</pre>
+</div>
+
+<div class="latex" id="orge086507">
+<p>
+<object type="image/svg+xml" data="ltximg/examples_fe8356d5a5ad63161c38d5cb69714295eeaa6ccc.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+
+</div>
+
+<ol class="org-ol">
+<li><p>
+Qual o valor do rendimento?
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(let [i (compound-index [0.013M 0.017M 0.021M])]
+  (interest i 3 16000))
+</pre>
+</div>
+
+<pre class="example">
+828.80M
+</pre></li>
+
+<li><p>
+Qual a taxa efetiva no trimestre?
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(let [c 16000
+      i (compound-index [0.013M 0.017M 0.021M])]
+  (rate (fv i 3 c) c))
+</pre>
+</div>
+
+<pre class="example">
+0.0518M
+</pre></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org13ce863" class="outline-3">
+<h3 id="org13ce863"><span class="section-number-3">2.6</span> Taxas corrigidas</h3>
+<div class="outline-text-3" id="text-2-6">
+<p>
+Quando precisamos corrigir uma taxa <object type="image/svg+xml" data="ltximg/examples_802f985f8a255b1976f3886fa2d0c180979dd84c.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> por outra taxa <object type="image/svg+xml" data="ltximg/examples_cae2d4d31c691e645c5b4eb88ae07cc3b4c5825f.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> indexada pelo período <object type="image/svg+xml" data="ltximg/examples_58199a5456c6af107f6ae48293c635a1c794b09c.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>, podemos calcular o produto:
+</p>
+<div class="latex" id="org11534e3">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_f8c9f617c840abe05dc46b5e3a160a642d1bea66.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<p>
+Ou ainda, generalizando para <object type="image/svg+xml" data="ltximg/examples_802f985f8a255b1976f3886fa2d0c180979dd84c.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> indexado por <object type="image/svg+xml" data="ltximg/examples_58199a5456c6af107f6ae48293c635a1c794b09c.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>, temos:
+</p>
+<div class="latex" id="orga853ba7">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_7708f187289fddeedce70da801e5023683b20614.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<p>
+<b>Exemplo:</b>
+</p>
+
+<p>
+Em três semestres consecutivos, uma aplicação rendeu 1%, 2% e 5%. Sabendo que o imposto de renda segue alíquotas semestrais progressivas de 22.5%, 20% e 17.5%, qual foi a taxa de rendimento líquido?
+</p>
+
+<p>
+Primeiro, calculamos a taxa real de rendimento de cada mês, considerando o imposto de renda:
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(let [interest [0.01M 0.02M 0.05M]
+      ;; Recolher a alíquota equivale a render (1 - alíquota)
+      tax [(- 1 0.225M) (- 1 0.20M) (- 1 0.175M)]]
+  (mapv * interest tax))
+</pre>
+</div>
+
+<pre class="example">
+[0.00775M 0.0160M 0.04125M]
+</pre>
+
+
+<p>
+Então, calculamos a taxa efetiva nos três semestres:
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(let [i (compound-index [0.00775M 0.0160M 0.04125M])]
+  (rate (i 3)))
+</pre>
+</div>
+
+<pre class="example">
+0.0661M
+</pre>
+
+
+<p>
+Provando pela definição:
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(let [interest ['i_1 'i_2 'i_3]
+      tax [(- 1 't_1) (- 1 't_2) (- 1 't_3)]
+      i (compound-index (mapv * interest tax))]
+  (align (eq 'i_e (rate (i 'n)))))
+</pre>
+</div>
+
+<div class="latex" id="org991b5d5">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_0b4fbe3458aa3047d04c216bc41d95d601c87270.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge2c16e7" class="outline-2">
+<h2 id="orge2c16e7"><span class="section-number-2">3</span> Capitais</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orga3982a4" class="outline-3">
+<h3 id="orga3982a4"><span class="section-number-3">3.1</span> Fluxo de caixa</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Denomina-se <b>fluxo de caixa</b>, de forma genérica, o conjunto de entradas e saídas de capitais de uma operação ao longo do tempo.
+</p>
+
+<p>
+É útil representá-lo graficamente com o <b>diagrama de fluxo de caixa</b>, onde o eixo horizontal representa a dimensão do tempo, as setas para cima as entradas de capital, e as setas para baixo as saídas de capital.
+</p>
+
+<p>
+<b>Exemplo:</b>
+</p>
+
+<p>
+<object type="image/svg+xml" data="ltximg/examples_582a327eb6d3042295452a64879cd888c10e9d85.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+<div class="latex" id="org75b9c98">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_d0b3ea584c22a6cd198f7c74b66af62b6a2cf154.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+<span class="equation-label">
+1
+</span>
+</div>
+
+</div>
+
+<p>
+<object type="image/svg+xml" data="ltximg/examples_568fedfd1ffd543c5f7f6922e4316132556026f2.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+<div class="latex" id="orgcc2eb64">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_856f7a44edbc73cc72b731398bce372a6c18d5c1.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+<span class="equation-label">
+1
+</span>
+</div>
+
+</div>
+
+<p>
+<object type="image/svg+xml" data="ltximg/examples_3d7037981db32d81e7a305273948e338e84c4192.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+<div class="latex" id="orgeb6c228">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_9b0d480dfd972157055f23fae14aefe045035059.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+<span class="equation-label">
+1
+</span>
+</div>
+
+</div>
+
+<p>
+<object type="image/svg+xml" data="ltximg/examples_57f0935b3a39db28e3c74784fea58e58b6e4d194.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+<div class="latex" id="org706679e">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_899ff036d0076a20251ceabbab83cd879cdc63db.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+<span class="equation-label">
+1
+</span>
+</div>
+
+</div>
+</div>
+
+<div id="outline-container-orgc283ac7" class="outline-4">
+<h4 id="orgc283ac7"><span class="section-number-4">3.1.1</span> Capitais equivalentes</h4>
+<div class="outline-text-4" id="text-3-1-1">
+<p>
+Considere os capitais <object type="image/svg+xml" data="ltximg/examples_6532cb19e9c87758bc02ed746cd41ac463a41a2a.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> e <object type="image/svg+xml" data="ltximg/examples_cc18e7b80452ecf4f33d8352f0bb2438985aa421.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> disponíveis no momento <object type="image/svg+xml" data="ltximg/examples_b2c1faafe389054fb76ed2f22fee4e477bf9270f.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> e <object type="image/svg+xml" data="ltximg/examples_58199a5456c6af107f6ae48293c635a1c794b09c.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>, respectivamente:
+</p>
+<div class="latex" id="org234f364">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_4d7107db5b7a83d6293852e924f06b3ef66ccd9e.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+<span class="equation-label">
+1
+</span>
+</div>
+
+</div>
+
+<div class="latex" id="org6dbd9b8">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_76c2189aba22f7a34729237d11bf7889b6a87a28.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+<span class="equation-label">
+1
+</span>
+</div>
+
+</div>
+
+<p>
+Pelas definições anteriores de valor futuro e valor presente, serão equivalentes os capitais <object type="image/svg+xml" data="ltximg/examples_6532cb19e9c87758bc02ed746cd41ac463a41a2a.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> e <object type="image/svg+xml" data="ltximg/examples_cc18e7b80452ecf4f33d8352f0bb2438985aa421.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> quando, pela taxa <object type="image/svg+xml" data="ltximg/examples_802f985f8a255b1976f3886fa2d0c180979dd84c.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>&#x2026;
+</p>
+
+<ol class="org-ol">
+<li><p>
+a juros simples:
+</p>
+<div class="latex" id="org45d5b56">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_a3c02646214d49c12fdd991e6e0d0d714e53e954.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div></li>
+
+<li><p>
+a juros compostos:
+</p>
+<div class="latex" id="org5dd7e8b">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_5c532b46da571dc8f6939403b1af3adba5fd551b.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div></li>
+
+<li><p>
+variável:
+</p>
+<div class="latex" id="orgd450614">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_601b020cf11cdb7f0a6465bb59abc383b7f61dff.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div></li>
+</ol>
+
+<p>
+Ou de forma geral, para qualquer fator de capitalização <object type="image/svg+xml" data="ltximg/examples_333fa488c64384d9ac35cace70d4900aed91375e.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>:
+</p>
+<div class="latex" id="org7c71eb7">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_437138021f70530a68750e4f7cc7553a80ea8878.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+</div>
+
+<ol class="org-ol">
+<li><a id="orgb5a7b99"></a>Valor do capital no tempo<br />
+<div class="outline-text-5" id="text-3-1-1-1">
+<p>
+Por analogia, se considerarmos o mesmo capital <object type="image/svg+xml" data="ltximg/examples_d6ec5501a7c088f1d112d9e8c5c879ec869f18fd.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> em dois fluxos de caixa distintos&#x2026;
+</p>
+<div class="latex" id="org4e5b80e">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_43b0029736cf71e6c160eb60c7420a86055207b6.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+<span class="equation-label">
+1
+</span>
+</div>
+
+</div>
+
+<div class="latex" id="orgbaf62c6">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_9a3c72482103cb98ba2189761ebdd915dd2eaaae.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+<span class="equation-label">
+1
+</span>
+</div>
+
+</div>
+
+<p>
+&#x2026; e algum fator de capitalização <object type="image/svg+xml" data="ltximg/examples_333fa488c64384d9ac35cace70d4900aed91375e.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> positivo, então pela definição anterior de <b>equivalência de capitais</b>, obviamente valem as desigualdades:
+</p>
+<div class="latex" id="org37c2426">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_d793d3ab23f6cf62476b8a8eb4161acab42ee1b2.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<p>
+Ou seja, um capital de $ 1000 hoje vale mais do que $ 1000 no futuro devido ao seu potencial de rendimento a uma taxa apropriada. Da mesma forma, o adiantamento de um capital de $ 1000 que a princípio seria pago no futuro deve ser descontado a uma taxa apropriada.
+</p>
+
+<p>
+Esse conceito fundamental recebe o nome <b>valor do capital no tempo</b>.
+</p>
+</div>
+</li>
+</ol>
+</div>
+
+<div id="outline-container-org6aefe75" class="outline-4">
+<h4 id="org6aefe75"><span class="section-number-4">3.1.2</span> Capitais equivalentes em sequência</h4>
+<div class="outline-text-4" id="text-3-1-2">
+<p>
+Dada uma operação com o seguinte fluxo de caixa:
+</p>
+<div class="latex" id="org2386ca8">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_06eca30333c7dc964fd800e8df00b5fea7fdb281.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+<span class="equation-label">
+1
+</span>
+</div>
+
+</div>
+
+<p>
+Então, pela definição de equivalência de capitais, podemos generalizar as equações de valor presente <object type="image/svg+xml" data="ltximg/examples_58563c6c58b6cb61ed90fd8bb0ff5d4fdbc6a67b.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> e valor futuro <object type="image/svg+xml" data="ltximg/examples_c716c239a039bc65c8ac32042be883c3f3e783f3.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> para este fluxo de caixa através de:
+</p>
+<div class="latex" id="orgc028be1">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_69802a9dc958dbaeab9c015137d4f1525b53777d.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<p>
+<b>Exemplo:</b>
+</p>
+
+<p>
+Uma operação prevê o pagamento de $ 2000, $ 3000 e $ 5000 em três meses consecutivos:
+</p>
+
+<div class="latex" id="org66794e8">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_2ee3dbf9fb1d2ed48b724849a6baf7e246cb40b6.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+<span class="equation-label">
+1
+</span>
+</div>
+
+</div>
+
+<p>
+Qual o menor capital que, aplicado a uma taxa de 1.5% ao mês, faz frente a estes pagamentos?
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(let [f (compound 0.015M)
+      cf [2000 3000 5000]]
+  (reduce + (map-indexed #(pv f (+ %1 1) %2) cf)))
+</pre>
+</div>
+
+<pre class="example">
+9664.0M
+</pre>
+
+
+<p>
+Prova:
+</p>
+
+<ul class="org-ul">
+<li><p>
+No primeiro mês de aplicação, obtemos o montante:
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(fv (compound 0.015M) 1 9664M)
+</pre>
+</div>
+
+<pre class="example">
+9809.0M
+</pre></li>
+
+<li><p>
+Se retiramos $ 2000 e aplicamos o restante por mais um mês, obtemos:
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(fv (compound 0.015M) 1 (+ 9809M -2000M))
+</pre>
+</div>
+
+<pre class="example">
+7926.1M
+</pre></li>
+
+<li><p>
+Se retiramos mais $ 3000 e aplicamos o restante por mais um mês, obtemos:
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(fv (compound 0.015M) 1 (+ 7926.1M -3000M))
+</pre>
+</div>
+
+<pre class="example">
+5000.0M
+</pre></li>
+</ul>
+
+<p>
+Obtendo então o seguinte fluxo de caixa da aplicação:
+</p>
+<div class="latex" id="orgf240bc6">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_ba13d15fd22934dfd66d5c0616a25e7751dec5d4.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+<span class="equation-label">
+1
+</span>
+</div>
+
+</div>
+
+<p>
+Que se somado ao fluxo de caixa dos pagamentos:
+</p>
+<div class="latex" id="org25d6f9a">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_2ee3dbf9fb1d2ed48b724849a6baf7e246cb40b6.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+<span class="equation-label">
+1
+</span>
+</div>
+
+</div>
+
+<p>
+Equivale ao fluxo de caixa líquido:
+</p>
+<div class="latex" id="org139bc2a">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_3fb7d55aa388b680c86e2edcceb3a5c28c2a0802.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+<span class="equation-label">
+1
+</span>
+</div>
+
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0d970a7" class="outline-4">
+<h4 id="org0d970a7"><span class="section-number-4">3.1.3</span> Valor presente líquido</h4>
+<div class="outline-text-4" id="text-3-1-3">
+<p>
+Dada uma operação com o seguinte fluxo de caixa:
+</p>
+<div class="latex" id="orge7ea49a">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_272054df5c4cb4fcc32276d280816a1f0fa6a113.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+<span class="equation-label">
+1
+</span>
+</div>
+
+</div>
+
+<p>
+Podemos analisar a rentabilidade (ou valor presente líquido) <object type="image/svg+xml" data="ltximg/examples_f6c3c4a212c55e21bd7d6d44b1f6d56ca2fba37f.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> dessa operação calculando:
+</p>
+<div class="latex" id="orgd8b1d3c">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_608e1131252ddffcd99b61d6107596a02083d571.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<ul class="org-ul">
+<li>Se <object type="image/svg+xml" data="ltximg/examples_f0b42c2704f7defc72dbaa69ba46b76fb37d6bfe.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>, a operação é rentável;</li>
+<li>Se <object type="image/svg+xml" data="ltximg/examples_5cd4dee9fb3db1a523dc0c0f9c409eb826b43809.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>, a operação não é rentável;</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0fb5639" class="outline-2">
+<h2 id="org0fb5639"><span class="section-number-2">4</span> Sistemas de Amortização</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Amortização é o processo de pagamento de uma dívida em pagamentos periódicos programados, de modo que ao fim do prazo tenha-se reembolsado o capital, o juro, ou ambos.
+Denomina-se por <b>sistema de amortização</b> um programa de pagamentos em particular.
+</p>
+</div>
+
+<div id="outline-container-org8ea55b2" class="outline-3">
+<h3 id="org8ea55b2"><span class="section-number-3">4.1</span> Sistema de Amortização Constante</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+É o sistema onde cada pagamento reembolsa uma fração igual do capital, mais o juro sobre o saldo devedor no período.
+</p>
+
+<p>
+Ou seja, a amortização <object type="image/svg+xml" data="ltximg/examples_e3e2119223514d0d4138267860fe21ec674b7336.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> segue a seguinte progressão:
+</p>
+<div class="latex" id="org2719832">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_cbafbb58491177833e0f8c293c55d460cf5ba15c.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<p>
+E o fluxo de caixa <object type="image/svg+xml" data="ltximg/examples_1676dee72e196b32e89c99f260bc04ab5bb43a53.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> segue a progressão:
+</p>
+<div class="latex" id="orgfacb2fe">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_028fa5939b3baea648107ea34d18392e02db2c80.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<p>
+<b>Exemplo</b>
+</p>
+
+<p>
+Para um desembolso de $ 1000 a uma taxa de 10% ao mês reembolsado em 3 pagamentos, o fluxo de caixa esperado é:
+</p>
+<div class="latex" id="org90105cb">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_701830f56527c073a847e4bb59d0c13d1be198bb.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+<span class="equation-label">
+1
+</span>
+</div>
+
+</div>
+
+<p>
+Em formato tabela:
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Pagamentos</td>
+<td class="org-left">Amortizações</td>
+<td class="org-left">Juros</td>
+<td class="org-left">Saldo</td>
+</tr>
+
+<tr>
+<td class="org-left">1000</td>
+<td class="org-left">0</td>
+<td class="org-left">0</td>
+<td class="org-left">1000</td>
+</tr>
+
+<tr>
+<td class="org-left">-433.33M</td>
+<td class="org-left">-333.33M</td>
+<td class="org-left">100.00M</td>
+<td class="org-left">666.67M</td>
+</tr>
+
+<tr>
+<td class="org-left">-400.00M</td>
+<td class="org-left">-333.33M</td>
+<td class="org-left">66.67M</td>
+<td class="org-left">333.34M</td>
+</tr>
+
+<tr>
+<td class="org-left">-366.67M</td>
+<td class="org-left">-333.33M</td>
+<td class="org-left">33.34M</td>
+<td class="org-left">0.01M</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgf7a8547" class="outline-3">
+<h3 id="orgf7a8547"><span class="section-number-3">4.2</span> Sistema Price ou Francês</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+É o sistema onde cada pagamento reembolsa uma parte do capital e juro sobre o saldo devedor, de modo que todos os pagamentos sejam de igual valor.
+</p>
+
+<p>
+Para isso, primeiro determinamos o valor dos pagamentos através da fórmula:
+</p>
+<div class="latex" id="org3351781">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_0ba20115b2777b84d9a5a3a3fe27484df8fe7463.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<p>
+Assim, o fluxo de caixa <object type="image/svg+xml" data="ltximg/examples_1676dee72e196b32e89c99f260bc04ab5bb43a53.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> segue a seguinte progressão:
+</p>
+<div class="latex" id="org1b1acd1">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_a53ab881a19d53be169b81a0c9551a45287e329e.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<p>
+<b>Exemplo</b>
+</p>
+
+<p>
+Para um desembolso de $ 1000 a uma taxa de 10% ao mês reembolsado em 3 pagamentos, o fluxo de caixa esperado é:
+</p>
+<div class="latex" id="org688ae2a">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_e985332e0bedee70c5be599d668da6d3f997c288.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+<span class="equation-label">
+1
+</span>
+</div>
+
+</div>
+
+<p>
+Em formato tabela:
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Pagamentos</td>
+<td class="org-left">Amortizações</td>
+<td class="org-left">Juros</td>
+<td class="org-left">Saldo</td>
+</tr>
+
+<tr>
+<td class="org-left">1000</td>
+<td class="org-left">0</td>
+<td class="org-left">0</td>
+<td class="org-left">1000</td>
+</tr>
+
+<tr>
+<td class="org-left">-402.11M</td>
+<td class="org-left">-302.11M</td>
+<td class="org-left">100.00M</td>
+<td class="org-left">697.89M</td>
+</tr>
+
+<tr>
+<td class="org-left">-402.11M</td>
+<td class="org-left">-332.32M</td>
+<td class="org-left">69.79M</td>
+<td class="org-left">365.57M</td>
+</tr>
+
+<tr>
+<td class="org-left">-402.11M</td>
+<td class="org-left">-365.55M</td>
+<td class="org-left">36.56M</td>
+<td class="org-left">0.02M</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+
+<div id="outline-container-orgd6cb237" class="outline-2">
+<h2 id="orgd6cb237"><span class="section-number-2">5</span> Referências</h2>
+<div class="outline-text-2" id="text-5">
+<div class="latex" id="org49fe28f">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_701c33635ce48ecb0398d670e5c0c23071566112.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+<span class="equation-label">
+1
+</span>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

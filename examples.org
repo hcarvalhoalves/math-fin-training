@@ -238,45 +238,20 @@
 
    Uma capital de $ 1000 é aplicado a uma taxa progressiva de 2%, 4%, 6%, 8%, ... ao ano, conforme o tempo em que permanece aplicado.
 
-   1. Qual será o montante para cada ano aplicado, durante os 5 primeiros anos?
+   Qual será o montante para cada ano aplicado, durante os 5 primeiros anos?
 
-      O fator de capitalização para essa taxa progressiva é dado por:
-      #+begin_src clojure :results value :wrap latex :exports results
+   O fator de capitalização para essa taxa progressiva é dado por:
+   #+begin_src clojure :results value :wrap latex :exports results
 (align
  (eq 'i 0.02)
  (eq ((literal-function 'f) 'n) (+ 1 (* 'i (expt 'n 2)))))
-      #+end_src
+   #+end_src
 
-      #+RESULTS:
-      #+begin_latex
-      \begin{align*}i &= 0.02\\f\left(n\right) &= 1 + i\,{n}^{2}\end{align*}
-      #+end_latex
-
-      Portanto:
-      #+begin_src clojure :results verbatim
+   Portanto:
+   #+begin_src clojure :results verbatim
 (let [f (fn [n] (+ 1 (* 0.02M (expt n 2))))]
   (mapv #(fv f % 1000) (range 1 6)))
-      #+end_src
-
-      #+RESULTS:
-      : [1020.0M 1080.0M 1180.0M 1320.0M 1500.0M]
-
-   2. Qual foi a taxa efetiva da aplicação?
-
-      #+begin_src clojure
-(rate 1150M 1000M)
-      #+end_src
-
-      #+RESULTS:
-      : 0.15M
-
-      Ou ainda
-      #+begin_src clojure
-(rate (+ 1 (* 0.02M (expt 5 2))))
-      #+end_src
-
-      #+RESULTS:
-      : 0.50M
+   #+end_src
 
 *** Frequência de capitalização
 
@@ -294,6 +269,12 @@
 ((simple (/ 1 365)) 365.0)
        #+end_src
 
+       #+RESULTS:
+       | 2.0 |
+       | 2.0 |
+       | 2.0 |
+       | 2.0 |
+
     2. No caso do regime de juros compostos, uma maior frequência de capitalização representa um rendimento maior:
        #+begin_src clojure
 ((compound 1) 1)
@@ -301,6 +282,12 @@
 ((compound (/ 1 360)) 360.0)
 ((compound (/ 1 365)) 365.0)
        #+end_src
+
+       #+RESULTS:
+       |                  2 |
+       | 2.6130352902246696 |
+       | 2.7145160248748965 |
+       |  2.714567482021534 |
 
        É possível observar que conforme aumenta a frequência de capitalização, aproximamos a função exponencial:
        #+begin_latex
@@ -432,7 +419,7 @@
 
    #+RESULTS:
    #+begin_latex
-   \begin{align*}i &= \begin{bmatrix}\displaystyle{i_1}&\displaystyle{i_2}&\displaystyle{i_3}&\displaystyle{\ldots}&\displaystyle{i_n}\end{bmatrix}\\f\left(n\right) &= \left(1 + i_1\right)\,\left(1 + i_2\right)\,\left(1 + i_3\right)\,\left(1 + \ldots\right)\,\left(1 + i_n\right)\end{align*}
+   \begin{align*}i &= \begin{pmatrix}\displaystyle{i_1} \cr \cr \displaystyle{i_2} \cr \cr \displaystyle{i_3} \cr \cr \displaystyle{\ldots} \cr \cr \displaystyle{i_n}\end{pmatrix}\\f\left(n\right) &= \left(1 + i_1\right)\,\left(1 + i_2\right)\,\left(1 + i_3\right)\,\left(1 + \ldots\right)\,\left(1 + i_n\right)\end{align*}
    #+end_latex
     
    Substituindo $f$ nas relações fundamentais, temos:
@@ -506,7 +493,7 @@
 
    #+RESULTS:
    #+begin_latex
-   \begin{align*}i &= \begin{bmatrix}\displaystyle{i_1}&\displaystyle{i_2}&\displaystyle{i_3}&\displaystyle{\ldots}&\displaystyle{i_n}\end{bmatrix}\\I &= \left(1 + i_1\,j_1\right)\,\left(1 + i_2\,j_2\right)\,\left(1 + i_3\,j_3\right)\,\left(1 + \ldots\,\ldots\right)\,\left(1 + i_n\,j_n\right)\end{align*}
+   \begin{align*}i &= \begin{bmatrix}\displaystyle{i_1} \cr \cr \displaystyle{i_2} \cr \cr \displaystyle{i_3} \cr \cr \displaystyle{\ldots} \cr \cr \displaystyle{i_n}\end{bmatrix}\\I &= \left(1 + i_1\,j_1\right)\,\left(1 + i_2\,j_2\right)\,\left(1 + i_3\,j_3\right)\,\left(1 + \ldots\,\ldots\right)\,\left(1 + i_n\,j_n\right)\end{align*}
    #+end_latex
 
    *Exemplo:*
@@ -562,11 +549,13 @@
 
    #+RESULTS:
    #+begin_latex
+   \begin{center}
    \begin{tikzpicture}
    \draw[-](0,0) -- (8,0);
    \draw[->](0.0,0)node[below]{$0$} -- ++(0,0.8)node[above]{${PV}_0$};
    \draw[-](8.0,0)node[below]{$n$}
    \end{tikzpicture}
+   \end{center}
    #+end_latex
 
    ${CF_2 = -FV_n}$
@@ -576,7 +565,13 @@
 
    #+RESULTS:
    #+begin_latex
-   \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);;;\draw[-](0.0,0)node[below]{$0$};;\draw[->](8.0,0)node[above]{$n$}-- ++(0,-0.8)node[below]{${FV}_n$};\end{tikzpicture}\end{center}
+   \begin{center}
+   \begin{tikzpicture}
+   \draw[-](0,0) -- (8,0);
+   \draw[-](0.0,0)node[below]{$0$};
+   \draw[->](8.0,0)node[above]{$n$} -- ++(0,-0.8)node[below]{${FV}_n$}
+   \end{tikzpicture}
+   \end{center}
    #+end_latex
 
    ${CF_3 = CF_1 + CF_2 = PV_0 - FV_n}$
@@ -586,7 +581,13 @@
 
    #+RESULTS:
    #+begin_latex
-   \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);\draw[->](0.0,0)node[below]{$0$}-- ++(0,0.8)node[above]{${PV}_0$};;;;\draw[->](8.0,0)node[above]{$n$}-- ++(0,-0.8)node[below]{${FV}_n$};\end{tikzpicture}\end{center}
+   \begin{center}
+   \begin{tikzpicture}
+   \draw[-](0,0) -- (8,0);
+   \draw[->](0.0,0)node[below]{$0$} -- ++(0,0.8)node[above]{${PV}_0$};
+   \draw[->](8.0,0)node[above]{$n$} -- ++(0,-0.8)node[below]{${FV}_n$}
+   \end{tikzpicture}
+   \end{center}
    #+end_latex
 
    ${CF_4 = -C_0 + C_n + C_m + C_o}$
@@ -596,7 +597,15 @@
 
    #+RESULTS:
    #+begin_latex
-   \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);;\draw[->](0.0,0)node[above]{$0$}-- ++(0,-0.8)node[below]{$C_0$};;\draw[->](2.6666667,0)node[below]{$n$}-- ++(0,0.8)node[above]{$C_n$};;;\draw[->](5.333333492279053,0)node[below]{$m$}-- ++(0,0.8)node[above]{$C_m$};;;\draw[->](8.000000238418579,0)node[below]{$o$}-- ++(0,0.8)node[above]{$C_o$};;\end{tikzpicture}\end{center}
+   \begin{center}
+   \begin{tikzpicture}
+   \draw[-](0,0) -- (8,0);
+   \draw[->](0.0,0)node[above]{$0$} -- ++(0,-0.8)node[below]{$C_0$};
+   \draw[->](2.6666667,0)node[below]{$n$} -- ++(0,0.8)node[above]{$C_n$};
+   \draw[->](5.333333492279053,0)node[below]{$m$} -- ++(0,0.8)node[above]{$C_m$};
+   \draw[->](8.000000238418579,0)node[below]{$o$} -- ++(0,0.8)node[above]{$C_o$}
+   \end{tikzpicture}
+   \end{center}
    #+end_latex
 
 *** Capitais equivalentes
@@ -608,7 +617,13 @@
 
     #+RESULTS:
     #+begin_latex
-    \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);\draw[->](0.0,0)node[below]{$0$}-- ++(0,0.8)node[above]{$C_0$};;;;;\draw[-](8.0,0)node[below]{$n$}\end{tikzpicture}\end{center}
+    \begin{center}
+    \begin{tikzpicture}
+    \draw[-](0,0) -- (8,0);
+    \draw[->](0.0,0)node[below]{$0$} -- ++(0,0.8)node[above]{$C_0$};
+    \draw[-](8.0,0)node[below]{$n$}
+    \end{tikzpicture}
+    \end{center}
     #+end_latex
 
     #+begin_src clojure :results value :wrap latex :exports results
@@ -617,7 +632,13 @@
 
     #+RESULTS:
     #+begin_latex
-    \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);;;\draw[-](0.0,0)node[below]{$0$};\draw[->](8.0,0)node[below]{$n$}-- ++(0,0.8)node[above]{$C_n$};;\end{tikzpicture}\end{center}
+    \begin{center}
+    \begin{tikzpicture}
+    \draw[-](0,0) -- (8,0);
+    \draw[-](0.0,0)node[below]{$0$};
+    \draw[->](8.0,0)node[below]{$n$} -- ++(0,0.8)node[above]{$C_n$}
+    \end{tikzpicture}
+    \end{center}
     #+end_latex
 
     Pelas definições anteriores de valor futuro e valor presente, serão equivalentes os capitais $C_0$ e $C_n$ quando, pela taxa $i$...
@@ -655,7 +676,7 @@
 
        #+RESULTS:
        #+begin_latex
-       \begin{align*}i &= \begin{bmatrix}\displaystyle{i_1}&\displaystyle{i_2}&\displaystyle{\ldots}&\displaystyle{i_n}\end{bmatrix}\\C_n &= C_0\,\left(1 + i_1\right)\,\left(1 + i_2\right)\,\left(1 + \ldots\right)\,\left(1 + i_n\right)\\C_0 &= \frac{C_n}{\left(1 + i_1\right)\,\left(1 + i_2\right)\,\left(1 + \ldots\right)\,\left(1 + i_n\right)}\end{align*}
+       \begin{align*}i &= \begin{bmatrix}\displaystyle{i_1} \cr \cr \displaystyle{i_2} \cr \cr \displaystyle{\ldots} \cr \cr \displaystyle{i_n}\end{bmatrix}\\C_n &= C_0\,\left(1 + i_1\right)\,\left(1 + i_2\right)\,\left(1 + \ldots\right)\,\left(1 + i_n\right)\\C_0 &= \frac{C_n}{\left(1 + i_1\right)\,\left(1 + i_2\right)\,\left(1 + \ldots\right)\,\left(1 + i_n\right)}\end{align*}
        #+end_latex
 
     Ou de forma geral, para qualquer fator de capitalização $f$:
@@ -678,7 +699,13 @@
 
      #+RESULTS:
      #+begin_latex
-     \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);\draw[->](0.0,0)node[below]{$0$}-- ++(0,0.8)node[above]{$C$};;;;;\draw[-](8.0,0)node[below]{$n$}\end{tikzpicture}\end{center}
+     \begin{center}
+     \begin{tikzpicture}
+     \draw[-](0,0) -- (8,0);
+     \draw[->](0.0,0)node[below]{$0$} -- ++(0,0.8)node[above]{$C$};
+     \draw[-](8.0,0)node[below]{$n$}
+     \end{tikzpicture}
+     \end{center}
      #+end_latex
 
      #+begin_src clojure :results value :wrap latex :exports results
@@ -687,7 +714,13 @@
 
      #+RESULTS:
      #+begin_latex
-     \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);;;\draw[-](0.0,0)node[below]{$0$};\draw[->](8.0,0)node[below]{$n$}-- ++(0,0.8)node[above]{$C$};;\end{tikzpicture}\end{center}
+     \begin{center}
+     \begin{tikzpicture}
+     \draw[-](0,0) -- (8,0);
+     \draw[-](0.0,0)node[below]{$0$};
+     \draw[->](8.0,0)node[below]{$n$} -- ++(0,0.8)node[above]{$C$}
+     \end{tikzpicture}
+     \end{center}
      #+end_latex
 
      ... e algum fator de capitalização $f$ positivo, então pela definição anterior de *equivalência de capitais*, obviamente valem as desigualdades:
@@ -716,7 +749,17 @@
 
     #+RESULTS:
     #+begin_latex
-    \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);\draw[->](0.0,0)node[below]{$0$}-- ++(0,0.8)node[above]{$C_0$};;;\draw[->](1.6,0)node[below]{$1$}-- ++(0,0.8)node[above]{$C_1$};;;\draw[->](3.200000047683716,0)node[below]{$2$}-- ++(0,0.8)node[above]{$C_2$};;;\draw[->](4.800000071525574,0)node[below]{$3$}-- ++(0,0.8)node[above]{$C_3$};;;;;\draw[-](6.400000095367432,0)node[below]{$\ldots$};\draw[->](8.00000011920929,0)node[below]{$n$}-- ++(0,0.8)node[above]{$C_n$};;\end{tikzpicture}\end{center}
+    \begin{center}
+    \begin{tikzpicture}
+    \draw[-](0,0) -- (8,0);
+    \draw[->](0.0,0)node[below]{$0$} -- ++(0,0.8)node[above]{$C_0$};
+    \draw[->](1.6,0)node[below]{$1$} -- ++(0,0.8)node[above]{$C_1$};
+    \draw[->](3.200000047683716,0)node[below]{$2$} -- ++(0,0.8)node[above]{$C_2$};
+    \draw[->](4.800000071525574,0)node[below]{$3$} -- ++(0,0.8)node[above]{$C_3$};
+    \draw[-](6.400000095367432,0)node[below]{$\ldots$};
+    \draw[->](8.00000011920929,0)node[below]{$n$} -- ++(0,0.8)node[above]{$C_n$}
+    \end{tikzpicture}
+    \end{center}
     #+end_latex
 
     Então, pela definição de equivalência de capitais, podemos generalizar as equações de valor presente $PV$ e valor futuro $FV$ para este fluxo de caixa através de:
@@ -745,7 +788,15 @@
 
     #+RESULTS:
     #+begin_latex
-    \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);;;\draw[-](0.0,0)node[below]{$0$};;\draw[->](2.6666667,0)node[above]{$1$}-- ++(0,-0.8)node[below]{$2000$};;;\draw[->](5.333333492279053,0)node[above]{$2$}-- ++(0,-0.8)node[below]{$3000$};;;\draw[->](8.000000238418579,0)node[above]{$3$}-- ++(0,-0.8)node[below]{$5000$};\end{tikzpicture}\end{center}
+    \begin{center}
+    \begin{tikzpicture}
+    \draw[-](0,0) -- (8,0);
+    \draw[-](0.0,0)node[below]{$0$};
+    \draw[->](2.6666667,0)node[above]{$1$} -- ++(0,-0.8)node[below]{$2000$};
+    \draw[->](5.333333492279053,0)node[above]{$2$} -- ++(0,-0.8)node[below]{$3000$};
+    \draw[->](8.000000238418579,0)node[above]{$3$} -- ++(0,-0.8)node[below]{$5000$}
+    \end{tikzpicture}
+    \end{center}
     #+end_latex
 
     Qual o menor capital que, aplicado a uma taxa de 1.5% ao mês, faz frente a estes pagamentos?
@@ -809,7 +860,15 @@
 
     #+RESULTS:
     #+begin_latex
-    \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);;;\draw[-](0.0,0)node[below]{$0$};;\draw[->](2.6666667,0)node[above]{$1$}-- ++(0,-0.8)node[below]{$2000$};;;\draw[->](5.333333492279053,0)node[above]{$2$}-- ++(0,-0.8)node[below]{$3000$};;;\draw[->](8.000000238418579,0)node[above]{$3$}-- ++(0,-0.8)node[below]{$5000$};\end{tikzpicture}\end{center}
+    \begin{center}
+    \begin{tikzpicture}
+    \draw[-](0,0) -- (8,0);
+    \draw[-](0.0,0)node[below]{$0$};
+    \draw[->](2.6666667,0)node[above]{$1$} -- ++(0,-0.8)node[below]{$2000$};
+    \draw[->](5.333333492279053,0)node[above]{$2$} -- ++(0,-0.8)node[below]{$3000$};
+    \draw[->](8.000000238418579,0)node[above]{$3$} -- ++(0,-0.8)node[below]{$5000$}
+    \end{tikzpicture}
+    \end{center}
     #+end_latex
 
     Equivale ao fluxo de caixa líquido:
@@ -819,7 +878,15 @@
 
     #+RESULTS:
     #+begin_latex
-    \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);;\draw[->](0.0,0)node[above]{$0$}-- ++(0,-0.8)node[below]{$9664$};;\draw[->](2.6666667,0)node[below]{$1$}-- ++(0,0.8)node[above]{$0$};;;\draw[->](5.333333492279053,0)node[below]{$2$}-- ++(0,0.8)node[above]{$0$};;;\draw[->](8.000000238418579,0)node[below]{$3$}-- ++(0,0.8)node[above]{$0$};;\end{tikzpicture}\end{center}
+    \begin{center}
+    \begin{tikzpicture}
+    \draw[-](0,0) -- (8,0);
+    \draw[->](0.0,0)node[above]{$0$} -- ++(0,-0.8)node[below]{$9664$};
+    \draw[->](2.6666667,0)node[below]{$1$} -- ++(0,0.8)node[above]{$0$};
+    \draw[->](5.333333492279053,0)node[below]{$2$} -- ++(0,0.8)node[above]{$0$};
+    \draw[->](8.000000238418579,0)node[below]{$3$} -- ++(0,0.8)node[above]{$0$}
+    \end{tikzpicture}
+    \end{center}
     #+end_latex
    
 *** Valor presente líquido
@@ -831,7 +898,13 @@
 
    #+RESULTS:
    #+begin_latex
-   \begin{center}\begin{tikzpicture}\draw[-] (0,0) -- (8,0);;\draw[->](0.0,0)node[above]{$0$}-- ++(0,-0.8)node[below]{$C_0$};;\draw[->](8.0,0)node[below]{$n$}-- ++(0,0.8)node[above]{$C_n$};;\end{tikzpicture}\end{center}
+   \begin{center}
+   \begin{tikzpicture}
+   \draw[-](0,0) -- (8,0);
+   \draw[->](0.0,0)node[above]{$0$} -- ++(0,-0.8)node[below]{$C_0$};
+   \draw[->](8.0,0)node[below]{$n$} -- ++(0,0.8)node[above]{$C_n$}
+   \end{tikzpicture}
+   \end{center}
    #+end_latex
 
     Podemos analisar a rentabilidade (ou valor presente líquido) ${NPV}$ dessa operação calculando:
@@ -848,48 +921,138 @@
     - Se ${NPV} > 0$, a operação é rentável;
     - Se $NPV \leq 0$, a operação não é rentável;
 
-** Calendários de amortização
+* Sistemas de Amortização
 
-*** Sistema de Amortização Constante
+  Amortização é o processo de pagamento de uma dívida em pagamentos periódicos programados, de modo que ao fim do prazo tenha-se reembolsado o capital, o juro, ou ambos.
+  Denomina-se por *sistema de amortização* um programa de pagamentos em particular.
 
-    #+begin_src clojure :results value :wrap latex
-(eq 'I (:interest (straight 'i 'n 'PV)))
-    #+end_src
+** Sistema de Amortização Constante
 
-    #+RESULTS:
-    #+begin_latex
-    $I = 0 + {PV}\,i + \left(\frac{{PV}\,i\,n - {PV}\,i}{n}\right) + \left(\frac{{PV}\,i\,n -2\,{PV}\,i}{n}\right) + \ldots$
-    #+end_latex
+   É o sistema onde cada pagamento reembolsa uma fração igual do capital, mais o juro sobre o saldo devedor no período.
 
-    #+begin_src clojure :results value :wrap latex
-(eq 'FV (:balance (straight 'i 'n 'PV)))
-    #+end_src    
+   Ou seja, a amortização $A$ segue a seguinte progressão:
+   #+begin_src clojure :results value :wrap latex :exports results
+(align (eq 'A (:amortizations (straight 'i 'n 'PV))))
+   #+end_src
 
-    #+RESULTS:
-    #+begin_latex
-    ${FV} = {PV} + \left(\frac{{PV}\,n - {PV}}{n}\right) + \left(\frac{{PV}\,n -2\,{PV}}{n}\right) + \left(\frac{{PV}\,n -3\,{PV}}{n}\right) + \ldots$
-    #+end_latex
-    
-    #+begin_src clojure
-(as-table (straight 0.1M 3 1000))
-    #+end_src
+   #+RESULTS:
+   #+begin_latex
+   \begin{align*}A &= 0 + \left(\frac{- {PV}}{n}\right) + \left(\frac{- {PV}}{n}\right) + \left(\frac{- {PV}}{n}\right) + \ldots\\I &= 0 + {PV}\,i + \left(\frac{{PV}\,i\,n - {PV}\,i}{n}\right) + \left(\frac{{PV}\,i\,n -2\,{PV}\,i}{n}\right) + \ldots\\{CF} &= {PV} + \left(\frac{- {PV}\,i\,n - {PV}}{n}\right) + \left(\frac{- {PV}\,i\,n + {PV}\,i - {PV}}{n}\right) + \left(\frac{- {PV}\,i\,n + 2\,{PV}\,i - {PV}}{n}\right) + \ldots\end{align*}
+   #+end_latex
 
-    #+RESULTS:
-    | :payments | :amortizations | :interest | :balance |
-    | 1000      | 0              | 0         | 1000     |
-    | -433.33M  | -333.33M       | 100.00M   | 666.67M  |
-    | -400.00M  | -333.33M       | 66.67M    | 333.34M  |
-    | -366.67M  | -333.33M       | 33.34M    | 0.01M    |
+   E o fluxo de caixa $CF$ segue a progressão:
+   #+begin_src clojure :results value :wrap latex :exports results
+(align (eq 'CF (:payments (straight 'i 'n 'PV))))
+   #+end_src
 
-*** Sistema Price ou Francês
+   #+RESULTS:
+   #+begin_latex
+   \begin{align*}{CF} &= {PV} + \left(\frac{- {PV}\,i\,n - {PV}}{n}\right) + \left(\frac{- {PV}\,i\,n + {PV}\,i - {PV}}{n}\right) + \left(\frac{- {PV}\,i\,n + 2\,{PV}\,i - {PV}}{n}\right) + \ldots\end{align*}
+   #+end_latex
 
-    #+begin_src clojure
-(as-table (price 0.1M 3 1000))
-    #+end_src
+   *Exemplo*
 
-    #+RESULTS:
-    | :payments | :amortizations | :interest | :balance |
-    | 1000      | 0              | 0         | 1000     |
-    | -402.11M  | -302.11M       | 100.00M   | 697.89M  |
-    | -402.11M  | -332.32M       | 69.79M    | 365.57M  |
-    | -402.11M  | -365.55M       | 36.56M    | 0.02M    |
+   Para um desembolso de $ 1000 a uma taxa de 10% ao mês reembolsado em 3 pagamentos, o fluxo de caixa esperado é:
+   #+begin_src clojure :results value :wrap latex :exports results
+(table->cashflow (straight 0.1M 3 1000))
+   #+end_src
+
+   #+RESULTS:
+   #+begin_latex
+   \begin{center}
+   \begin{tikzpicture}
+   \draw[-](0,0) -- (8,0);
+   \draw[->](0.0,0)node[below]{$0$} -- ++(0,0.8)node[above]{$1000$};
+   \draw[->](2.6666667,0)node[above]{$1$} -- ++(0,-0.8)node[below]{$-433.33$};
+   \draw[->](5.333333492279053,0)node[above]{$2$} -- ++(0,-0.8)node[below]{$-400.00$};
+   \draw[->](8.000000238418579,0)node[above]{$3$} -- ++(0,-0.8)node[below]{$-366.67$}
+   \end{tikzpicture}
+   \end{center}
+   #+end_latex
+
+   Em formato tabela:
+   #+begin_src clojure :exports results
+(as-table (straight 0.1M 3 1000) {:payments "Pagamentos" :amortizations "Amortizações" :interest "Juros" :balance "Saldo"})
+   #+end_src
+
+   #+RESULTS:
+   | Pagamentos | Amortizações | Juros   | Saldo   |
+   | 1000       | 0            | 0       | 1000    |
+   | -433.33M   | -333.33M     | 100.00M | 666.67M |
+   | -400.00M   | -333.33M     | 66.67M  | 333.34M |
+   | -366.67M   | -333.33M     | 33.34M  | 0.01M   |
+
+** Sistema Price ou Francês
+
+   É o sistema onde cada pagamento reembolsa uma parte do capital e juro sobre o saldo devedor, de modo que todos os pagamentos sejam de igual valor.
+
+   Para isso, primeiro determinamos o valor dos pagamentos através da fórmula:
+   #+begin_src clojure :results value :wrap latex :exports results
+(align (eq 'PMT (simplify (* 'PV (pmt (compound 'i) 'n)))))
+   #+end_src
+
+   #+RESULTS:
+   #+begin_latex
+   \begin{align*}{PMT} &= \frac{- {PV}\,i}{{\left(i + 1\right)}^{\left(- n\right)} + -1}\end{align*}
+   #+end_latex
+
+   Assim, o fluxo de caixa $CF$ segue a seguinte progressão:
+   #+begin_src clojure :results value :wrap latex :exports results
+(align
+ (eq 'CF (:payments (price 'i 'n 'PV))))
+   #+end_src
+
+   #+RESULTS:
+   #+begin_latex
+   \begin{align*}A &= 0 + \left(\frac{{PV}\,i\,{\left(i + 1\right)}^{\left(- n\right)}}{{\left(i + 1\right)}^{\left(- n\right)} + -1}\right) + \left(\frac{{PV}\,{i}^{2}\,{\left(i + 1\right)}^{\left(- n\right)} + {PV}\,i\,{\left(i + 1\right)}^{\left(- n\right)}}{{\left(i + 1\right)}^{\left(- n\right)} + -1}\right) + \left(\frac{{PV}\,{i}^{3}\,{\left(i + 1\right)}^{\left(- n\right)} + 2\,{PV}\,{i}^{2}\,{\left(i + 1\right)}^{\left(- n\right)} + {PV}\,i\,{\left(i + 1\right)}^{\left(- n\right)}}{{\left(i + 1\right)}^{\left(- n\right)} + -1}\right) + \ldots\\I &= 0 + {PV}\,i + \left(\frac{{PV}\,{i}^{2}\,{\left(i + 1\right)}^{\left(- n\right)} + {PV}\,i\,{\left(i + 1\right)}^{\left(- n\right)} - {PV}\,i}{{\left(i + 1\right)}^{\left(- n\right)} + -1}\right) + \left(\frac{{PV}\,{i}^{3}\,{\left(i + 1\right)}^{\left(- n\right)} + 2\,{PV}\,{i}^{2}\,{\left(i + 1\right)}^{\left(- n\right)} + {PV}\,i\,{\left(i + 1\right)}^{\left(- n\right)} - {PV}\,i}{{\left(i + 1\right)}^{\left(- n\right)} + -1}\right) + \ldots\\{CF} &= {PV} + \left(\frac{{PV}\,i}{{\left(i + 1\right)}^{\left(- n\right)} + -1}\right) + \left(\frac{{PV}\,i}{{\left(i + 1\right)}^{\left(- n\right)} + -1}\right) + \left(\frac{{PV}\,i}{{\left(i + 1\right)}^{\left(- n\right)} + -1}\right) + \ldots\end{align*}
+   #+end_latex
+
+   *Exemplo*
+
+   Para um desembolso de $ 1000 a uma taxa de 10% ao mês reembolsado em 3 pagamentos, o fluxo de caixa esperado é:
+   #+begin_src clojure :results value :wrap latex :exports results
+(table->cashflow (price 0.1M 3 1000))
+   #+end_src
+
+   #+RESULTS:
+   #+begin_latex
+   \begin{center}
+   \begin{tikzpicture}
+   \draw[-](0,0) -- (8,0);
+   \draw[->](0.0,0)node[below]{$0$} -- ++(0,0.8)node[above]{$1000$};
+   \draw[->](2.6666667,0)node[above]{$1$} -- ++(0,-0.8)node[below]{$-402.11$};
+   \draw[->](5.333333492279053,0)node[above]{$2$} -- ++(0,-0.8)node[below]{$-402.11$};
+   \draw[->](8.000000238418579,0)node[above]{$3$} -- ++(0,-0.8)node[below]{$-402.11$}
+   \end{tikzpicture}
+   \end{center}
+   #+end_latex
+
+   Em formato tabela:
+   #+begin_src clojure :exports results
+(as-table (price 0.1M 3 1000) {:payments "Pagamentos" :amortizations "Amortizações" :interest "Juros" :balance "Saldo"})
+   #+end_src
+
+   #+RESULTS:
+   | Pagamentos | Amortizações | Juros   | Saldo   |
+   | 1000       | 0            | 0       | 1000    |
+   | -402.11M   | -302.11M     | 100.00M | 697.89M |
+   | -402.11M   | -332.32M     | 69.79M  | 365.57M |
+   | -402.11M   | -365.55M     | 36.56M  | 0.02M   |
+
+
+
+* Referências
+
+  #+begin_latex
+\begin{thebibliography}
+\bibitem{matfin}
+  HAZZAN, Samuel; POMPEO, José Nicolau.
+  \textit{Matemática Financeira}. 6. ed.
+  Editora Saraiva, 2007
+
+\bibitem{matess}
+  SODRÉ, Ulysses.
+  \textit{Matemática Essencial}, Julho de 2020.
+  \\\texttt{http://www.uel.br/projetos/matessencial/basico/financeira/123financeira.html}
+\end{thebibliography}
+  #+end_latex
