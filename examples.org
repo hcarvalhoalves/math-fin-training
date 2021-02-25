@@ -1,4 +1,4 @@
-#+TITLE: Fundamentos de Matemática Financeira (WIP)
+#+TITLE: Fundamentos de Matemática Financeira
 #+SUBTITLE: Uma abordagem interativa em Clojure
 #+AUTHOR: Henrique Carvalho Alves
 #+EMAIL: henrique.alves@nubank.com.br
