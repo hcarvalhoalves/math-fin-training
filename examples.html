@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt_BR" xml:lang="pt_BR">
 <head>
-<!-- 2021-02-26 Fri 11:11 -->
+<!-- 2021-02-26 Fri 15:35 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Fundamentos de Matemática Financeira</title>
@@ -227,47 +227,51 @@
 <h2>&Iacute;ndice</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orga6a6a9c">1. Introdução</a></li>
-<li><a href="#org2b15921">2. Juros</a>
+<li><a href="#org4fa3e6a">1. Introdução</a></li>
+<li><a href="#org6b7977e">2. Juros</a>
 <ul>
-<li><a href="#orge1210bf">2.1. Fundamentos</a></li>
-<li><a href="#orgd3fe9cb">2.2. Juros simples</a></li>
-<li><a href="#org0c8497f">2.3. Juros compostos</a></li>
-<li><a href="#orgeedaf99">2.4. Fator de capitalização</a>
+<li><a href="#orgb81108a">2.1. Fundamentos</a></li>
+<li><a href="#org7fc4d12">2.2. Juros simples</a></li>
+<li><a href="#org6266ad5">2.3. Juros compostos</a></li>
+<li><a href="#orgce462f3">2.4. Fator de capitalização</a>
 <ul>
-<li><a href="#orgdaa4ef6">2.4.1. Frequência de capitalização</a></li>
-<li><a href="#org54a13db">2.4.2. Taxa efetiva</a></li>
-<li><a href="#org5e00c8c">2.4.3. Taxa equivalente</a></li>
+<li><a href="#org415168c">2.4.1. Frequência de capitalização</a></li>
+<li><a href="#orgb40070c">2.4.2. Taxa efetiva</a></li>
+<li><a href="#org1fc5431">2.4.3. Taxa equivalente</a></li>
 </ul>
 </li>
-<li><a href="#org42b45f9">2.5. Taxas variáveis</a></li>
-<li><a href="#orga1b81f8">2.6. Taxas corrigidas</a></li>
+<li><a href="#org4c12bdc">2.5. Taxas variáveis</a></li>
+<li><a href="#org6a37f2d">2.6. Taxas corrigidas</a></li>
 </ul>
 </li>
-<li><a href="#org725d4c0">3. Capitais</a>
+<li><a href="#org89b9b48">3. Capitais</a>
 <ul>
-<li><a href="#org6f59ae9">3.1. Fluxo de caixa</a>
+<li><a href="#orgdb11094">3.1. Fluxo de caixa</a>
 <ul>
-<li><a href="#org08b1eec">3.1.1. Capitais equivalentes</a></li>
-<li><a href="#org72308d0">3.1.2. Capitais equivalentes em sequência</a></li>
-<li><a href="#org27c98ef">3.1.3. Valor presente líquido</a></li>
+<li><a href="#org1ecd70b">3.1.1. Capitais equivalentes</a></li>
+<li><a href="#orge7e70ea">3.1.2. Capitais equivalentes em sequência</a></li>
+<li><a href="#orgaae0fd9">3.1.3. Valor presente líquido</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org6a05db4">4. Sistemas de Amortização</a>
+<li><a href="#orgc0c0740">4. Sistemas de Amortização</a>
 <ul>
-<li><a href="#orga8930d9">4.1. Sistema de Amortização Constante</a></li>
-<li><a href="#orgde99b14">4.2. Sistema Price ou Francês</a></li>
+<li><a href="#org6170e76">4.1. Sistema de Amortização Constante</a></li>
+<li><a href="#orge116cfc">4.2. Sistema Price ou Francês</a>
+<ul>
+<li><a href="#orgdcc3572">4.2.1. Período de Carência</a></li>
 </ul>
 </li>
-<li><a href="#org308f7b9">5. Referências</a></li>
+</ul>
+</li>
+<li><a href="#org6d48e3b">5. Referências</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orga6a6a9c" class="outline-2">
-<h2 id="orga6a6a9c"><span class="section-number-2">1</span> Introdução</h2>
+<div id="outline-container-org4fa3e6a" class="outline-2">
+<h2 id="org4fa3e6a"><span class="section-number-2">1</span> Introdução</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 O objetivo do livro é construir uma intuição de como derivar fórmulas para cálculos de juros, fluxos de caixa e sistemas de amortização a partir de relações básicas, ao mesmo tempo em que demonstra como implementar em uma linguagem de programação.
@@ -280,12 +284,12 @@ Todas as fórmulas incluídas no livro são geradas a partir da definição can�
 </div>
 </div>
 
-<div id="outline-container-org2b15921" class="outline-2">
-<h2 id="org2b15921"><span class="section-number-2">2</span> Juros</h2>
+<div id="outline-container-org6b7977e" class="outline-2">
+<h2 id="org6b7977e"><span class="section-number-2">2</span> Juros</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orge1210bf" class="outline-3">
-<h3 id="orge1210bf"><span class="section-number-3">2.1</span> Fundamentos</h3>
+<div id="outline-container-orgb81108a" class="outline-3">
+<h3 id="orgb81108a"><span class="section-number-3">2.1</span> Fundamentos</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 Dado o capital (ou valor presente) <object type="image/svg+xml" data="ltximg/examples_574f05544b438681dc299dc0cfb22657854a8773.svg" class="org-svg">
@@ -294,7 +298,7 @@ Sorry, your browser does not support SVG.</object>, o juro <object type="image/s
 Sorry, your browser does not support SVG.</object> e o montante (ou valor futuro) <object type="image/svg+xml" data="ltximg/examples_c716c239a039bc65c8ac32042be883c3f3e783f3.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>, as relações fundamentais são:
 </p>
-<div class="latex" id="orgaa2234e">
+<div class="latex" id="org491b7d3">
 
 <div class="equation-container">
 <span class="equation">
@@ -365,13 +369,13 @@ E a taxa de juros pode ser inferida por:
 
 <p>
 Neste exemplo, o período da taxa <object type="image/svg+xml" data="ltximg/examples_802f985f8a255b1976f3886fa2d0c180979dd84c.svg" class="org-svg">
-Sorry, your browser does not support SVG.</object> e o período de aplicação foi o mesmo.
+Sorry, your browser does not support SVG.</object> e o período de aplicação foi o mesmo. Quando aplicamos a taxa ao capital mais de uma vez, é preciso adotar um dos <b>regimes de capitalização</b>.
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgd3fe9cb" class="outline-3">
-<h3 id="orgd3fe9cb"><span class="section-number-3">2.2</span> Juros simples</h3>
+<div id="outline-container-org7fc4d12" class="outline-3">
+<h3 id="org7fc4d12"><span class="section-number-3">2.2</span> Juros simples</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 É o regime de capitalização em que aplica-se a taxa <object type="image/svg+xml" data="ltximg/examples_802f985f8a255b1976f3886fa2d0c180979dd84c.svg" class="org-svg">
@@ -380,7 +384,7 @@ Sorry, your browser does not support SVG.</object>, por <object type="image/svg+
 Sorry, your browser does not support SVG.</object> períodos, para obter o montante <object type="image/svg+xml" data="ltximg/examples_c716c239a039bc65c8ac32042be883c3f3e783f3.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>:
 </p>
-<div class="latex" id="org4e1507f">
+<div class="latex" id="orgeda5cd2">
 
 <div class="equation-container">
 <span class="equation">
@@ -397,7 +401,7 @@ Sorry, your browser does not support SVG.</object> do montante <object type="ima
 Sorry, your browser does not support SVG.</object> e obter o capital <object type="image/svg+xml" data="ltximg/examples_58563c6c58b6cb61ed90fd8bb0ff5d4fdbc6a67b.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>:
 </p>
-<div class="latex" id="org40d87ab">
+<div class="latex" id="orge94df18">
 
 <div class="equation-container">
 <span class="equation">
@@ -411,7 +415,7 @@ Sorry, your browser does not support SVG.</object>
 <p>
 Portanto, o <b>fator de capitalização</b> para juros simples é a função linear:
 </p>
-<div class="latex" id="orgda396c8">
+<div class="latex" id="org1ff8090">
 
 <div class="equation-container">
 <span class="equation">
@@ -429,7 +433,7 @@ Sorry, your browser does not support SVG.</object>
 <p>
 Um capital de $ 1000 aplicado a uma taxa de 8% ao mês segue a progressão:
 </p>
-<div class="latex" id="orgc60f41d">
+<div class="latex" id="org11ad88a">
 
 <div class="equation-container">
 <span class="equation">
@@ -467,8 +471,8 @@ E o capital que equivale a este montante (ou ainda, o valor futuro trazido a val
 </div>
 </div>
 
-<div id="outline-container-org0c8497f" class="outline-3">
-<h3 id="org0c8497f"><span class="section-number-3">2.3</span> Juros compostos</h3>
+<div id="outline-container-org6266ad5" class="outline-3">
+<h3 id="org6266ad5"><span class="section-number-3">2.3</span> Juros compostos</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 É o regime de capitalização em que aplica-se a taxa <object type="image/svg+xml" data="ltximg/examples_802f985f8a255b1976f3886fa2d0c180979dd84c.svg" class="org-svg">
@@ -478,7 +482,7 @@ Sorry, your browser does not support SVG.</object> sobre <i>este</i> montante, e
 Sorry, your browser does not support SVG.</object> número de vezes, até obter o montante final <object type="image/svg+xml" data="ltximg/examples_c716c239a039bc65c8ac32042be883c3f3e783f3.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>:
 </p>
-<div class="latex" id="org82bf52a">
+<div class="latex" id="orgd2406cd">
 
 <div class="equation-container">
 <span class="equation">
@@ -495,7 +499,7 @@ Sorry, your browser does not support SVG.</object> do montante <object type="ima
 Sorry, your browser does not support SVG.</object> e obter o capital <object type="image/svg+xml" data="ltximg/examples_58563c6c58b6cb61ed90fd8bb0ff5d4fdbc6a67b.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>:
 </p>
-<div class="latex" id="orgdd59e52">
+<div class="latex" id="org238aad5">
 
 <div class="equation-container">
 <span class="equation">
@@ -509,7 +513,7 @@ Sorry, your browser does not support SVG.</object>
 <p>
 Portanto, diferente dos juros simples, o <b>fator de capitalização</b> para juros compostos é a função <i>não-linear</i>:
 </p>
-<div class="latex" id="orgff77263">
+<div class="latex" id="org6d709c8">
 
 <div class="equation-container">
 <span class="equation">
@@ -527,7 +531,7 @@ Sorry, your browser does not support SVG.</object>
 <p>
 Um capital de $ 1000 aplicado a uma taxa de 8% ao mês segue a progressão:
 </p>
-<div class="latex" id="org81eab5b">
+<div class="latex" id="org54c0e6e">
 
 <div class="equation-container">
 <span class="equation">
@@ -565,8 +569,8 @@ E o capital que equivale a este montante (ou ainda, o valor futuro trazido a val
 </div>
 </div>
 
-<div id="outline-container-orgeedaf99" class="outline-3">
-<h3 id="orgeedaf99"><span class="section-number-3">2.4</span> Fator de capitalização</h3>
+<div id="outline-container-orgce462f3" class="outline-3">
+<h3 id="orgce462f3"><span class="section-number-3">2.4</span> Fator de capitalização</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 Para aplicações que duram <object type="image/svg+xml" data="ltximg/examples_58199a5456c6af107f6ae48293c635a1c794b09c.svg" class="org-svg">
@@ -574,7 +578,7 @@ Sorry, your browser does not support SVG.</object> períodos, podemos generaliza
 Sorry, your browser does not support SVG.</object> em função de <object type="image/svg+xml" data="ltximg/examples_58199a5456c6af107f6ae48293c635a1c794b09c.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>, obtendo:
 </p>
-<div class="latex" id="orgd635800">
+<div class="latex" id="org80fa60f">
 
 <div class="equation-container">
 <span class="equation">
@@ -600,7 +604,7 @@ Qual será o montante para cada ano aplicado, durante os 5 primeiros anos?
 <p>
 O fator de capitalização para essa taxa progressiva é dado por:
 </p>
-<div class="latex" id="org0eae1f1">
+<div class="latex" id="orgcbda882">
 
 <div class="equation-container">
 <span class="equation">
@@ -625,8 +629,8 @@ Portanto:
 </pre>
 </div>
 
-<div id="outline-container-orgdaa4ef6" class="outline-4">
-<h4 id="orgdaa4ef6"><span class="section-number-4">2.4.1</span> Frequência de capitalização</h4>
+<div id="outline-container-org415168c" class="outline-4">
+<h4 id="org415168c"><span class="section-number-4">2.4.1</span> Frequência de capitalização</h4>
 <div class="outline-text-4" id="text-2-4-1">
 <p>
 Quando a aplicação dura <object type="image/svg+xml" data="ltximg/examples_58199a5456c6af107f6ae48293c635a1c794b09c.svg" class="org-svg">
@@ -639,7 +643,7 @@ Sorry, your browser does not support SVG.</object> períodos, a <b>frequência d
 
 <p>
 Assumindo uma taxa <object type="image/svg+xml" data="ltximg/examples_802f985f8a255b1976f3886fa2d0c180979dd84c.svg" class="org-svg">
-Sorry, your browser does not support SVG.</object> de 1% ao ano, analisamos o fator de capitalização com aplicações anuais, mensais e diárias.
+Sorry, your browser does not support SVG.</object> de 100% ao ano, analisamos o fator de capitalização com aplicações anuais, mensais e diárias.
 </p>
 
 <ol class="org-ol">
@@ -718,7 +722,7 @@ No caso do regime de juros compostos, uma maior frequência de capitalização r
 <p>
 É possível observar que conforme aumenta a frequência de capitalização, aproximamos a função exponencial:
 </p>
-<div class="latex" id="orgaed001c">
+<div class="latex" id="org0aee037">
 
 <div class="equation-container">
 <span class="equation">
@@ -755,14 +759,14 @@ Sorry, your browser does not support SVG.</object>
 </div>
 </div>
 
-<div id="outline-container-org54a13db" class="outline-4">
-<h4 id="org54a13db"><span class="section-number-4">2.4.2</span> Taxa efetiva</h4>
+<div id="outline-container-orgb40070c" class="outline-4">
+<h4 id="orgb40070c"><span class="section-number-4">2.4.2</span> Taxa efetiva</h4>
 <div class="outline-text-4" id="text-2-4-2">
 <p>
 Quando generalizamos o <b>fator de capitalização</b>, a fórmula para inferir a taxa <object type="image/svg+xml" data="ltximg/examples_802f985f8a255b1976f3886fa2d0c180979dd84c.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object> (apresentada anteriormente), agora nos dá a chamada <b>taxa efetiva</b>:
 </p>
-<div class="latex" id="orga142868">
+<div class="latex" id="org8a72c93">
 
 <div class="equation-container">
 <span class="equation">
@@ -796,8 +800,8 @@ Qual foi a taxa efetiva neste ano?
 </div>
 </div>
 
-<div id="outline-container-org5e00c8c" class="outline-4">
-<h4 id="org5e00c8c"><span class="section-number-4">2.4.3</span> Taxa equivalente</h4>
+<div id="outline-container-org1fc5431" class="outline-4">
+<h4 id="org1fc5431"><span class="section-number-4">2.4.3</span> Taxa equivalente</h4>
 <div class="outline-text-4" id="text-2-4-3">
 <p>
 São equivalentes as taxas nominais <object type="image/svg+xml" data="ltximg/examples_48b58e866964d6506eefadd236e8f54397690512.svg" class="org-svg">
@@ -806,7 +810,7 @@ Sorry, your browser does not support SVG.</object> quando, aplicadas nos períod
 Sorry, your browser does not support SVG.</object> e <object type="image/svg+xml" data="ltximg/examples_2ec00658e2795776e132efb9284a91d79edd3b67.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object> relativos a duração das respectivas taxas, resultam no mesmo valor:
 </p>
-<div class="latex" id="org31e465f">
+<div class="latex" id="org0417620">
 
 <div class="equation-container">
 <span class="equation">
@@ -842,7 +846,7 @@ A juros simples?
 <p>
 Prova:
 </p>
-<div class="latex" id="org2e5d9a8">
+<div class="latex" id="org1a8d0bf">
 
 <div class="equation-container">
 <span class="equation">
@@ -878,7 +882,7 @@ A juros compostos?
 <p>
 Prova:
 </p>
-<div class="latex" id="org9578ee1">
+<div class="latex" id="org4f5d9f5">
 
 <div class="equation-container">
 <span class="equation">
@@ -902,15 +906,15 @@ Sorry, your browser does not support SVG.</object>
 </div>
 </div>
 
-<div id="outline-container-org42b45f9" class="outline-3">
-<h3 id="org42b45f9"><span class="section-number-3">2.5</span> Taxas variáveis</h3>
+<div id="outline-container-org4c12bdc" class="outline-3">
+<h3 id="org4c12bdc"><span class="section-number-3">2.5</span> Taxas variáveis</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 Quando a taxa de juros varia ao longo do tempo, podemos generalizar o <b>fator de capitalização</b> para um vetor de taxas <object type="image/svg+xml" data="ltximg/examples_802f985f8a255b1976f3886fa2d0c180979dd84c.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object> indexado pelo período <object type="image/svg+xml" data="ltximg/examples_58199a5456c6af107f6ae48293c635a1c794b09c.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>:
 </p>
-<div class="latex" id="org7cbbb4d">
+<div class="latex" id="org5d38bc7">
 
 <div class="equation-container">
 <span class="equation">
@@ -925,7 +929,7 @@ Sorry, your browser does not support SVG.</object>
 Substituindo <object type="image/svg+xml" data="ltximg/examples_333fa488c64384d9ac35cace70d4900aed91375e.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object> nas relações fundamentais, temos:
 </p>
-<div class="latex" id="org53e0365">
+<div class="latex" id="org24a7224">
 
 <div class="equation-container">
 <span class="equation">
@@ -952,7 +956,7 @@ Dada a função <code>compound-index</code> que retorna o produto das taxas:
 </pre>
 </div>
 
-<div class="latex" id="orgcf45180">
+<div class="latex" id="orgea65e54">
 <p>
 <object type="image/svg+xml" data="ltximg/examples_fe8356d5a5ad63161c38d5cb69714295eeaa6ccc.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>
@@ -991,8 +995,8 @@ Qual a taxa efetiva no trimestre?
 </div>
 </div>
 
-<div id="outline-container-orga1b81f8" class="outline-3">
-<h3 id="orga1b81f8"><span class="section-number-3">2.6</span> Taxas corrigidas</h3>
+<div id="outline-container-org6a37f2d" class="outline-3">
+<h3 id="org6a37f2d"><span class="section-number-3">2.6</span> Taxas corrigidas</h3>
 <div class="outline-text-3" id="text-2-6">
 <p>
 Quando precisamos corrigir uma taxa <object type="image/svg+xml" data="ltximg/examples_802f985f8a255b1976f3886fa2d0c180979dd84c.svg" class="org-svg">
@@ -1000,7 +1004,7 @@ Sorry, your browser does not support SVG.</object> por outra taxa <object type="
 Sorry, your browser does not support SVG.</object> indexada pelo período <object type="image/svg+xml" data="ltximg/examples_58199a5456c6af107f6ae48293c635a1c794b09c.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>, podemos calcular o produto:
 </p>
-<div class="latex" id="org1f6fb82">
+<div class="latex" id="org6b2165e">
 
 <div class="equation-container">
 <span class="equation">
@@ -1016,7 +1020,7 @@ Ou ainda, generalizando para <object type="image/svg+xml" data="ltximg/examples_
 Sorry, your browser does not support SVG.</object> indexado por <object type="image/svg+xml" data="ltximg/examples_58199a5456c6af107f6ae48293c635a1c794b09c.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>, temos:
 </p>
-<div class="latex" id="org8897c5c">
+<div class="latex" id="org7671a10">
 
 <div class="equation-container">
 <span class="equation">
@@ -1076,7 +1080,7 @@ Provando pela definição:
 </pre>
 </div>
 
-<div class="latex" id="orgb61a62c">
+<div class="latex" id="orgd30c037">
 
 <div class="equation-container">
 <span class="equation">
@@ -1090,12 +1094,12 @@ Sorry, your browser does not support SVG.</object>
 </div>
 </div>
 
-<div id="outline-container-org725d4c0" class="outline-2">
-<h2 id="org725d4c0"><span class="section-number-2">3</span> Capitais</h2>
+<div id="outline-container-org89b9b48" class="outline-2">
+<h2 id="org89b9b48"><span class="section-number-2">3</span> Capitais</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org6f59ae9" class="outline-3">
-<h3 id="org6f59ae9"><span class="section-number-3">3.1</span> Fluxo de caixa</h3>
+<div id="outline-container-orgdb11094" class="outline-3">
+<h3 id="orgdb11094"><span class="section-number-3">3.1</span> Fluxo de caixa</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Denomina-se <b>fluxo de caixa</b>, de forma genérica, o conjunto de entradas e saídas de capitais de uma operação ao longo do tempo.
@@ -1113,7 +1117,7 @@ Denomina-se <b>fluxo de caixa</b>, de forma genérica, o conjunto de entradas e 
 <object type="image/svg+xml" data="ltximg/examples_582a327eb6d3042295452a64879cd888c10e9d85.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>
 </p>
-<div class="latex" id="org22849f8">
+<div class="latex" id="org4fa7c6c">
 
 <div class="equation-container">
 <span class="equation">
@@ -1131,7 +1135,7 @@ Sorry, your browser does not support SVG.</object>
 <object type="image/svg+xml" data="ltximg/examples_568fedfd1ffd543c5f7f6922e4316132556026f2.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>
 </p>
-<div class="latex" id="org2502306">
+<div class="latex" id="org3bd7d71">
 
 <div class="equation-container">
 <span class="equation">
@@ -1149,7 +1153,7 @@ Sorry, your browser does not support SVG.</object>
 <object type="image/svg+xml" data="ltximg/examples_3d7037981db32d81e7a305273948e338e84c4192.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>
 </p>
-<div class="latex" id="orgc003928">
+<div class="latex" id="orgea34a2d">
 
 <div class="equation-container">
 <span class="equation">
@@ -1167,7 +1171,7 @@ Sorry, your browser does not support SVG.</object>
 <object type="image/svg+xml" data="ltximg/examples_57f0935b3a39db28e3c74784fea58e58b6e4d194.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>
 </p>
-<div class="latex" id="org3baef13">
+<div class="latex" id="orgd27390c">
 
 <div class="equation-container">
 <span class="equation">
@@ -1182,8 +1186,8 @@ Sorry, your browser does not support SVG.</object>
 </div>
 </div>
 
-<div id="outline-container-org08b1eec" class="outline-4">
-<h4 id="org08b1eec"><span class="section-number-4">3.1.1</span> Capitais equivalentes</h4>
+<div id="outline-container-org1ecd70b" class="outline-4">
+<h4 id="org1ecd70b"><span class="section-number-4">3.1.1</span> Capitais equivalentes</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <p>
 Considere os capitais <object type="image/svg+xml" data="ltximg/examples_6532cb19e9c87758bc02ed746cd41ac463a41a2a.svg" class="org-svg">
@@ -1192,7 +1196,7 @@ Sorry, your browser does not support SVG.</object> disponíveis no momento <obje
 Sorry, your browser does not support SVG.</object> e <object type="image/svg+xml" data="ltximg/examples_58199a5456c6af107f6ae48293c635a1c794b09c.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>, respectivamente:
 </p>
-<div class="latex" id="org198a266">
+<div class="latex" id="org5f6ff7c">
 
 <div class="equation-container">
 <span class="equation">
@@ -1206,7 +1210,7 @@ Sorry, your browser does not support SVG.</object>
 
 </div>
 
-<div class="latex" id="orgb90caa7">
+<div class="latex" id="orga11820f">
 
 <div class="equation-container">
 <span class="equation">
@@ -1231,7 +1235,7 @@ Sorry, your browser does not support SVG.</object>&#x2026;
 <li><p>
 a juros simples:
 </p>
-<div class="latex" id="org78445e7">
+<div class="latex" id="orgfb76522">
 
 <div class="equation-container">
 <span class="equation">
@@ -1245,7 +1249,7 @@ Sorry, your browser does not support SVG.</object>
 <li><p>
 a juros compostos:
 </p>
-<div class="latex" id="org19dd305">
+<div class="latex" id="orgdb3705a">
 
 <div class="equation-container">
 <span class="equation">
@@ -1259,7 +1263,7 @@ Sorry, your browser does not support SVG.</object>
 <li><p>
 variável:
 </p>
-<div class="latex" id="org3aeb710">
+<div class="latex" id="org7c19c44">
 
 <div class="equation-container">
 <span class="equation">
@@ -1275,7 +1279,7 @@ Sorry, your browser does not support SVG.</object>
 Ou de forma geral, para qualquer fator de capitalização <object type="image/svg+xml" data="ltximg/examples_333fa488c64384d9ac35cace70d4900aed91375e.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>:
 </p>
-<div class="latex" id="org066eb8f">
+<div class="latex" id="org03f5cf2">
 
 <div class="equation-container">
 <span class="equation">
@@ -1288,13 +1292,13 @@ Sorry, your browser does not support SVG.</object>
 </div>
 
 <ol class="org-ol">
-<li><a id="org7f8efca"></a>Valor do capital no tempo<br />
+<li><a id="org8d3288c"></a>Valor do capital no tempo<br />
 <div class="outline-text-5" id="text-3-1-1-1">
 <p>
 Por analogia, se considerarmos o mesmo capital <object type="image/svg+xml" data="ltximg/examples_d6ec5501a7c088f1d112d9e8c5c879ec869f18fd.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object> em dois fluxos de caixa distintos&#x2026;
 </p>
-<div class="latex" id="orge84e6d3">
+<div class="latex" id="orgda667b2">
 
 <div class="equation-container">
 <span class="equation">
@@ -1308,7 +1312,7 @@ Sorry, your browser does not support SVG.</object>
 
 </div>
 
-<div class="latex" id="org1da1b82">
+<div class="latex" id="org2c03f23">
 
 <div class="equation-container">
 <span class="equation">
@@ -1326,7 +1330,7 @@ Sorry, your browser does not support SVG.</object>
 &#x2026; e algum fator de capitalização <object type="image/svg+xml" data="ltximg/examples_333fa488c64384d9ac35cace70d4900aed91375e.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object> positivo, então pela definição anterior de <b>equivalência de capitais</b>, obviamente valem as desigualdades:
 </p>
-<div class="latex" id="org155f816">
+<div class="latex" id="org1dac1b8">
 
 <div class="equation-container">
 <span class="equation">
@@ -1349,13 +1353,13 @@ Esse conceito fundamental recebe o nome <b>valor do capital no tempo</b>.
 </ol>
 </div>
 
-<div id="outline-container-org72308d0" class="outline-4">
-<h4 id="org72308d0"><span class="section-number-4">3.1.2</span> Capitais equivalentes em sequência</h4>
+<div id="outline-container-orge7e70ea" class="outline-4">
+<h4 id="orge7e70ea"><span class="section-number-4">3.1.2</span> Capitais equivalentes em sequência</h4>
 <div class="outline-text-4" id="text-3-1-2">
 <p>
 Dada uma operação com o seguinte fluxo de caixa:
 </p>
-<div class="latex" id="orgb4bd3de">
+<div class="latex" id="org553e321">
 
 <div class="equation-container">
 <span class="equation">
@@ -1374,7 +1378,7 @@ Então, pela definição de equivalência de capitais, podemos generalizar as eq
 Sorry, your browser does not support SVG.</object> e valor futuro <object type="image/svg+xml" data="ltximg/examples_c716c239a039bc65c8ac32042be883c3f3e783f3.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object> para este fluxo de caixa através de:
 </p>
-<div class="latex" id="orgd3c2145">
+<div class="latex" id="org3f602a4">
 
 <div class="equation-container">
 <span class="equation">
@@ -1393,7 +1397,7 @@ Sorry, your browser does not support SVG.</object>
 Uma operação prevê o pagamento de $ 2000, $ 3000 e $ 5000 em três meses consecutivos:
 </p>
 
-<div class="latex" id="orgc656b5d">
+<div class="latex" id="orgb8054f0">
 
 <div class="equation-container">
 <span class="equation">
@@ -1467,7 +1471,7 @@ Se retiramos mais $ 3000 e aplicamos o restante por mais um mês, obtemos:
 <p>
 Obtendo então o seguinte fluxo de caixa da aplicação:
 </p>
-<div class="latex" id="org2cd4d36">
+<div class="latex" id="org9620f16">
 
 <div class="equation-container">
 <span class="equation">
@@ -1484,7 +1488,7 @@ Sorry, your browser does not support SVG.</object>
 <p>
 Que se somado ao fluxo de caixa dos pagamentos:
 </p>
-<div class="latex" id="orgc1027f6">
+<div class="latex" id="org7a4c315">
 
 <div class="equation-container">
 <span class="equation">
@@ -1501,7 +1505,7 @@ Sorry, your browser does not support SVG.</object>
 <p>
 Equivale ao fluxo de caixa líquido:
 </p>
-<div class="latex" id="orgada30df">
+<div class="latex" id="org1b2ba59">
 
 <div class="equation-container">
 <span class="equation">
@@ -1517,13 +1521,13 @@ Sorry, your browser does not support SVG.</object>
 </div>
 </div>
 
-<div id="outline-container-org27c98ef" class="outline-4">
-<h4 id="org27c98ef"><span class="section-number-4">3.1.3</span> Valor presente líquido</h4>
+<div id="outline-container-orgaae0fd9" class="outline-4">
+<h4 id="orgaae0fd9"><span class="section-number-4">3.1.3</span> Valor presente líquido</h4>
 <div class="outline-text-4" id="text-3-1-3">
 <p>
 Dada uma operação com o seguinte fluxo de caixa:
 </p>
-<div class="latex" id="org32bb1f6">
+<div class="latex" id="org795ffb8">
 
 <div class="equation-container">
 <span class="equation">
@@ -1541,7 +1545,7 @@ Sorry, your browser does not support SVG.</object>
 Podemos analisar a rentabilidade (ou valor presente líquido) <object type="image/svg+xml" data="ltximg/examples_f6c3c4a212c55e21bd7d6d44b1f6d56ca2fba37f.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object> dessa operação calculando:
 </p>
-<div class="latex" id="org184ac76">
+<div class="latex" id="orge2f022f">
 
 <div class="equation-container">
 <span class="equation">
@@ -1563,8 +1567,8 @@ Sorry, your browser does not support SVG.</object>, a operação não é rentáv
 </div>
 </div>
 
-<div id="outline-container-org6a05db4" class="outline-2">
-<h2 id="org6a05db4"><span class="section-number-2">4</span> Sistemas de Amortização</h2>
+<div id="outline-container-orgc0c0740" class="outline-2">
+<h2 id="orgc0c0740"><span class="section-number-2">4</span> Sistemas de Amortização</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Amortização é o processo de pagamento de uma dívida em pagamentos periódicos programados, de modo que ao fim do prazo tenha-se reembolsado o capital, o juro, ou ambos.
@@ -1572,8 +1576,8 @@ Denomina-se por <b>sistema de amortização</b> um programa de pagamentos em par
 </p>
 </div>
 
-<div id="outline-container-orga8930d9" class="outline-3">
-<h3 id="orga8930d9"><span class="section-number-3">4.1</span> Sistema de Amortização Constante</h3>
+<div id="outline-container-org6170e76" class="outline-3">
+<h3 id="org6170e76"><span class="section-number-3">4.1</span> Sistema de Amortização Constante</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 É o sistema onde cada pagamento reembolsa uma fração igual do capital, mais o juro sobre o saldo devedor no período.
@@ -1583,7 +1587,7 @@ Denomina-se por <b>sistema de amortização</b> um programa de pagamentos em par
 Ou seja, a amortização <object type="image/svg+xml" data="ltximg/examples_e3e2119223514d0d4138267860fe21ec674b7336.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object> segue a seguinte progressão:
 </p>
-<div class="latex" id="org7b76245">
+<div class="latex" id="org10a701c">
 
 <div class="equation-container">
 <span class="equation">
@@ -1598,7 +1602,7 @@ Sorry, your browser does not support SVG.</object>
 E o fluxo de caixa <object type="image/svg+xml" data="ltximg/examples_1676dee72e196b32e89c99f260bc04ab5bb43a53.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object> segue a progressão:
 </p>
-<div class="latex" id="org46f6948">
+<div class="latex" id="orge002f14">
 
 <div class="equation-container">
 <span class="equation">
@@ -1616,7 +1620,7 @@ Sorry, your browser does not support SVG.</object>
 <p>
 Para um desembolso de $ 1000 a uma taxa de 10% ao mês reembolsado em 3 pagamentos, o fluxo de caixa esperado é:
 </p>
-<div class="latex" id="org8d5053f">
+<div class="latex" id="orgb5c0f43">
 
 <div class="equation-container">
 <span class="equation">
@@ -1685,8 +1689,8 @@ Em formato tabela:
 </div>
 </div>
 
-<div id="outline-container-orgde99b14" class="outline-3">
-<h3 id="orgde99b14"><span class="section-number-3">4.2</span> Sistema Price ou Francês</h3>
+<div id="outline-container-orge116cfc" class="outline-3">
+<h3 id="orge116cfc"><span class="section-number-3">4.2</span> Sistema Price ou Francês</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 É o sistema onde cada pagamento reembolsa uma parte do capital e juro sobre o saldo devedor, de modo que todos os pagamentos sejam de igual valor.
@@ -1695,7 +1699,7 @@ Em formato tabela:
 <p>
 Para isso, primeiro determinamos o valor dos pagamentos através da fórmula:
 </p>
-<div class="latex" id="orgf798abb">
+<div class="latex" id="orgce0e4f1">
 
 <div class="equation-container">
 <span class="equation">
@@ -1710,7 +1714,7 @@ Sorry, your browser does not support SVG.</object>
 Assim, o fluxo de caixa <object type="image/svg+xml" data="ltximg/examples_1676dee72e196b32e89c99f260bc04ab5bb43a53.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object> segue a seguinte progressão:
 </p>
-<div class="latex" id="orgd92c5d3">
+<div class="latex" id="org0c697d5">
 
 <div class="equation-container">
 <span class="equation">
@@ -1728,7 +1732,7 @@ Sorry, your browser does not support SVG.</object>
 <p>
 Para um desembolso de $ 1000 a uma taxa de 10% ao mês reembolsado em 3 pagamentos, o fluxo de caixa esperado é:
 </p>
-<div class="latex" id="org3c1f83d">
+<div class="latex" id="org2c67fd9">
 
 <div class="equation-container">
 <span class="equation">
@@ -1795,15 +1799,105 @@ Em formato tabela:
 </tbody>
 </table>
 </div>
+
+<div id="outline-container-orgdcc3572" class="outline-4">
+<h4 id="orgdcc3572"><span class="section-number-4">4.2.1</span> Período de Carência</h4>
+<div class="outline-text-4" id="text-4-2-1">
+<p>
+Quando o primeiro pagamento não ocorre em um período inteiro, mas em <object type="image/svg+xml" data="ltximg/examples_aad7fe24284c5c445077020611cba1191ed36604.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object> períodos, podemos ajustar a fórmula para obtenção do valor dos pagamentos multiplicando pelo valor futuro após o período de carência:
+</p>
+
+<div class="latex" id="org8060435">
+
+<div class="equation-container">
+<span class="equation">
+<object type="image/svg+xml" data="ltximg/examples_859739b8c94903be5c728f9dac7961f76d7de33f.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</span>
+</div>
+
+</div>
+
+<p>
+<b>Exemplo:</b>
+</p>
+
+<p>
+Qual o valor do pagamento para um desembolso de $ 1000 a uma taxa de 10% ao mês, reembolsado em 3 pagamentos, com o primeiro pagamento em 2 meses?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">(* (fv (compound 0.1M) 2 1000M) (pmt (compound 0.1M) 3))
+</pre>
+</div>
+
+<pre class="example">
+486.55M
+</pre>
+
+
+<p>
+Assim, o programa de pagamentos fica:
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Pagamentos</td>
+<td class="org-left">Amortizações</td>
+<td class="org-left">Juros</td>
+<td class="org-left">Saldo</td>
+</tr>
+
+<tr>
+<td class="org-left">1210.0M</td>
+<td class="org-left">0.0M</td>
+<td class="org-left">0.0M</td>
+<td class="org-left">1210.0M</td>
+</tr>
+
+<tr>
+<td class="org-left">-486.55M</td>
+<td class="org-left">-365.55M</td>
+<td class="org-left">121.00M</td>
+<td class="org-left">844.45M</td>
+</tr>
+
+<tr>
+<td class="org-left">-486.55M</td>
+<td class="org-left">-402.10M</td>
+<td class="org-left">84.45M</td>
+<td class="org-left">442.35M</td>
+</tr>
+
+<tr>
+<td class="org-left">-486.55M</td>
+<td class="org-left">-442.31M</td>
+<td class="org-left">44.24M</td>
+<td class="org-left">0.04M</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 
-
-
-<div id="outline-container-org308f7b9" class="outline-2">
-<h2 id="org308f7b9"><span class="section-number-2">5</span> Referências</h2>
+<div id="outline-container-org6d48e3b" class="outline-2">
+<h2 id="org6d48e3b"><span class="section-number-2">5</span> Referências</h2>
 <div class="outline-text-2" id="text-5">
-<div class="latex" id="orgf307d55">
+<div class="latex" id="orgc8f07f1">
 
 <div class="equation-container">
 <span class="equation">

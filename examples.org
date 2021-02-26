@@ -85,7 +85,7 @@
       #+RESULTS:
       : 0.22M
 
-   Neste exemplo, o período da taxa $i$ e o período de aplicação foi o mesmo.
+   Neste exemplo, o período da taxa $i$ e o período de aplicação foi o mesmo. Quando aplicamos a taxa ao capital mais de uma vez, é preciso adotar um dos *regimes de capitalização*.
 
 ** Juros simples
 
@@ -259,7 +259,7 @@
 
     *Exemplo*:
    
-    Assumindo uma taxa $i$ de 1% ao ano, analisamos o fator de capitalização com aplicações anuais, mensais e diárias.
+    Assumindo uma taxa $i$ de 100% ao ano, analisamos o fator de capitalização com aplicações anuais, mensais e diárias.
    
     1. No caso do regime de juros simples, não há diferença entre frequências de capitalização diferentes.
        #+begin_src clojure
@@ -1039,7 +1039,44 @@
    | -402.11M   | -332.32M     | 69.79M  | 365.57M |
    | -402.11M   | -365.55M     | 36.56M  | 0.02M   |
 
+*** Período de Carência
 
+    Quando o primeiro pagamento não ocorre em um período inteiro, mas em $c$ períodos, podemos ajustar a fórmula para obtenção do valor dos pagamentos multiplicando pelo valor futuro após o período de carência:
+
+    #+begin_src clojure :results value :wrap latex :exports results
+(align
+ (eq 'FV (fv (compound 'i) 'c 'PV))
+ (eq 'PMT (simplify (* 'FV (pmt (compound 'i) 'n))))
+ (eq 'PMT (simplify (* (fv (compound 'i) 'c 'PV) (pmt (compound 'i) 'n)))))
+   #+end_src
+
+   #+RESULTS:
+   #+begin_latex
+   \begin{align*}{FV} &= {PV}\,{\left(1 + i\right)}^{c}\\{PMT} &= \frac{- {FV}\,i}{{\left(i + 1\right)}^{\left(- n\right)} + -1}\\{PMT} &= \frac{- {PV}\,i\,{\left(i + 1\right)}^{c}}{{\left(i + 1\right)}^{\left(- n\right)} + -1}\end{align*}
+   #+end_latex
+
+   *Exemplo:*
+
+   Qual o valor do pagamento para um desembolso de $ 1000 a uma taxa de 10% ao mês, reembolsado em 3 pagamentos, com o primeiro pagamento em 2 meses?
+
+   #+begin_src clojure
+(* (fv (compound 0.1M) 2 1000M) (pmt (compound 0.1M) 3))
+   #+end_src
+
+   #+RESULTS:
+   : 486.55M
+
+   Assim, o programa de pagamentos fica:
+   #+begin_src clojure :exports results
+(as-table (price 0.1M 3 (fv (compound 0.1M) 2 1000M)) {:payments "Pagamentos" :amortizations "Amortizações" :interest "Juros" :balance "Saldo"})
+   #+end_src
+
+   #+RESULTS:
+   | Pagamentos | Amortizações | Juros   | Saldo   |
+   | 1210.0M    | 0.0M         | 0.0M    | 1210.0M |
+   | -486.55M   | -365.55M     | 121.00M | 844.45M |
+   | -486.55M   | -402.10M     | 84.45M  | 442.35M |
+   | -486.55M   | -442.31M     | 44.24M  | 0.04M   |
 
 * Referências
 
