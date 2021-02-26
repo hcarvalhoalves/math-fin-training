@@ -950,7 +950,7 @@
    \begin{align*}{CF} &= {PV} + \left(\frac{- {PV}\,i\,n - {PV}}{n}\right) + \left(\frac{- {PV}\,i\,n + {PV}\,i - {PV}}{n}\right) + \left(\frac{- {PV}\,i\,n + 2\,{PV}\,i - {PV}}{n}\right) + \ldots\end{align*}
    #+end_latex
 
-   *Exemplo*
+   *Exemplo:*
 
    Para um desembolso de $ 1000 a uma taxa de 10% ao mês reembolsado em 3 pagamentos, o fluxo de caixa esperado é:
    #+begin_src clojure :results value :wrap latex :exports results
@@ -1007,7 +1007,7 @@
    \begin{align*}A &= 0 + \left(\frac{{PV}\,i\,{\left(i + 1\right)}^{\left(- n\right)}}{{\left(i + 1\right)}^{\left(- n\right)} + -1}\right) + \left(\frac{{PV}\,{i}^{2}\,{\left(i + 1\right)}^{\left(- n\right)} + {PV}\,i\,{\left(i + 1\right)}^{\left(- n\right)}}{{\left(i + 1\right)}^{\left(- n\right)} + -1}\right) + \left(\frac{{PV}\,{i}^{3}\,{\left(i + 1\right)}^{\left(- n\right)} + 2\,{PV}\,{i}^{2}\,{\left(i + 1\right)}^{\left(- n\right)} + {PV}\,i\,{\left(i + 1\right)}^{\left(- n\right)}}{{\left(i + 1\right)}^{\left(- n\right)} + -1}\right) + \ldots\\I &= 0 + {PV}\,i + \left(\frac{{PV}\,{i}^{2}\,{\left(i + 1\right)}^{\left(- n\right)} + {PV}\,i\,{\left(i + 1\right)}^{\left(- n\right)} - {PV}\,i}{{\left(i + 1\right)}^{\left(- n\right)} + -1}\right) + \left(\frac{{PV}\,{i}^{3}\,{\left(i + 1\right)}^{\left(- n\right)} + 2\,{PV}\,{i}^{2}\,{\left(i + 1\right)}^{\left(- n\right)} + {PV}\,i\,{\left(i + 1\right)}^{\left(- n\right)} - {PV}\,i}{{\left(i + 1\right)}^{\left(- n\right)} + -1}\right) + \ldots\\{CF} &= {PV} + \left(\frac{{PV}\,i}{{\left(i + 1\right)}^{\left(- n\right)} + -1}\right) + \left(\frac{{PV}\,i}{{\left(i + 1\right)}^{\left(- n\right)} + -1}\right) + \left(\frac{{PV}\,i}{{\left(i + 1\right)}^{\left(- n\right)} + -1}\right) + \ldots\end{align*}
    #+end_latex
 
-   *Exemplo*
+   *Exemplo:*
 
    Para um desembolso de $ 1000 a uma taxa de 10% ao mês reembolsado em 3 pagamentos, o fluxo de caixa esperado é:
    #+begin_src clojure :results value :wrap latex :exports results

@@ -193,6 +193,9 @@
 (defn x->series [x]
   (s/generate (const x) :sicmutils.series/series))
 
+(defn xs->series [xs]
+  (apply s/series (into [1] xs)))
+
 (defn term [f]
   (fn [n]
     (if (zero? n) 1
@@ -238,7 +241,9 @@
   ([i n pv]
    (let [i'  (compound i)
          p'  (- (pmt i' n))
-         cf  (* pv (x->series p'))
+         cf  (* pv (if (number? n)
+                     (xs->series (repeat n p'))
+                     (x->series p')))
          icf (* cf (i->series i'))]
      (with-meta
        {:payments      cf
@@ -272,7 +277,9 @@
   ([i n pv]
    (let [i'  (simple i)
          p'  (- (pmt i' n))
-         cf  (* pv (x->series p'))
+         cf  (* pv (if (number? n)
+                     (xs->series (repeat n p'))
+                     (x->series p')))
          icf (* cf (i->series i'))]
      (with-meta
        {:payments      (- cf (- icf cf))
@@ -319,7 +326,7 @@
   (fmap #(s/sum % n) s))
 
 (comment
-  (let [t (straight 0.1 3 1000)]
+  (let [t (straight 0.1M 3 1000)]
    (->> (balance-sheet [:pnl/revenue :asset/loan] (:interest t)
                        [:asset/cash :asset/loan] (:payments t))
         (run-sheet 4))))
